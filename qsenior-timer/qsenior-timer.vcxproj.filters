@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>qml;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>qrc;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+    </Filter>
+    <Filter Include="Header Files\frame">
+      <UniqueIdentifier>{b8324444-22a5-42a5-87c4-5000265c9833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\frame">
+      <UniqueIdentifier>{dd0a8162-e965-49c1-ab12-313df35b96c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\model">
+      <UniqueIdentifier>{bdbde514-7fc6-470e-98ea-fb238574ceae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\model">
+      <UniqueIdentifier>{969c2452-7739-484f-af2c-f84d10babe1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\view">
+      <UniqueIdentifier>{128550e6-3ca8-4615-bb3a-5c3c846d54e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\view">
+      <UniqueIdentifier>{f3d81cf8-8461-4cd2-827c-8b30c28f51ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\delegate">
+      <UniqueIdentifier>{1c6745a9-98e8-4524-9cc3-404792e9432a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\delegate">
+      <UniqueIdentifier>{217e4077-6e78-491f-a09c-c53018070eca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\global">
+      <UniqueIdentifier>{cba1f4f6-fa23-4172-b0a9-23b645fe1cbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\global">
+      <UniqueIdentifier>{ddf3b6c9-1505-4bec-8eab-7ecfee1b1a66}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="frame\mainwin.cpp">
+      <Filter>Source Files\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="frame\create_timer_item_dlg.cpp">
+      <Filter>Source Files\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="view\timer_table_view.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="view\timer_table_header_view.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="delegate\timer_item_delegrate.cpp">
+      <Filter>Source Files\delegate</Filter>
+    </ClCompile>
+    <ClCompile Include="model\timer_table_model.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="global\focus_detector.cpp">
+      <Filter>Source Files\global</Filter>
+    </ClCompile>
+    <ClCompile Include="global\config.cpp">
+      <Filter>Source Files\global</Filter>
+    </ClCompile>
+    <ClCompile Include="frame\settingsdlg.cpp">
+      <Filter>Source Files\frame</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="frame\mainwin.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="frame\create_timer_item_dlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="settingsdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="resources\res.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\qsenior-timer.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\qsenior-timer.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="frame\create_timer_item_dlg.h">
+      <Filter>Header Files\frame</Filter>
+    </QtMoc>
+    <QtMoc Include="frame\mainwin.h">
+      <Filter>Header Files\frame</Filter>
+    </QtMoc>
+    <QtMoc Include="delegate\timer_item_delegrate.h">
+      <Filter>Header Files\delegate</Filter>
+    </QtMoc>
+    <QtMoc Include="view\timer_table_header_view.h">
+      <Filter>Header Files\view</Filter>
+    </QtMoc>
+    <QtMoc Include="view\timer_table_view.h">
+      <Filter>Header Files\view</Filter>
+    </QtMoc>
+    <QtMoc Include="model\timer_table_model.h">
+      <Filter>Header Files\model</Filter>
+    </QtMoc>
+    <QtMoc Include="frame\settingsdlg.h">
+      <Filter>Header Files\frame</Filter>
+    </QtMoc>
+    <QtMoc Include="global\focus_detector.h">
+      <Filter>Header Files\global</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="global\event_types.h">
+      <Filter>Header Files\global</Filter>
+    </ClInclude>
+    <ClInclude Include="global\config.h">
+      <Filter>Header Files\global</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

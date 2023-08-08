@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/pictures">
+        <file>aim.png</file>
+        <file>filter.png</file>
+        <file>filter_pressed.png</file>
+    </qresource>
+</RCC>

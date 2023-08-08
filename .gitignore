@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+/.vs/qsenior-timer
+/qsenior-timer/x64
+/x64/Debug
