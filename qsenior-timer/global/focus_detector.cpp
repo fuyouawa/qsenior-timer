@@ -7,25 +7,12 @@ FocusDetector::FocusDetector(QObject* parent) :
     win_name_buf(),
     proc_name_buf(),
     prev_win_name_buf(),
-    prev_proc_name_buf(),
-    scan_timer_(this)
+    prev_proc_name_buf()
 {
-    scan_timer_.setInterval(Settings::ScanFocusInter * 1000);
-    connect(&scan_timer_, &QTimer::timeout, this, &FocusDetector::ScanForceWindow);
 }
 
 FocusDetector::~FocusDetector()
 {
-}
-
-void FocusDetector::StartScanning()
-{
-    scan_timer_.start();
-}
-
-void FocusDetector::StopScanning()
-{
-    scan_timer_.stop();
 }
 
 void FocusDetector::ScanForceWindow()
@@ -58,8 +45,8 @@ void FocusDetector::ScanForceWindow()
             }
             CloseHandle(hprocess);
         }
-        if (CompareStringOrdinal(win_name_buf, _countof(win_name_buf), prev_win_name_buf, _countof(prev_win_name_buf), TRUE) != 0 ||
-            CompareStringOrdinal(proc_name_buf, _countof(proc_name_buf), prev_proc_name_buf, _countof(prev_proc_name_buf), TRUE) != 0)
+        if (CompareStringOrdinal(win_name_buf, _countof(win_name_buf), prev_win_name_buf, _countof(prev_win_name_buf), TRUE) != CSTR_EQUAL ||
+            CompareStringOrdinal(proc_name_buf, _countof(proc_name_buf), prev_proc_name_buf, _countof(prev_proc_name_buf), TRUE) != CSTR_EQUAL)
         {
             FocusWindowChangedEvent tmp;
             tmp.cur_win = QString::fromWCharArray(win_name_buf);
@@ -71,5 +58,4 @@ void FocusDetector::ScanForceWindow()
             StringCchCopy(prev_proc_name_buf, _countof(prev_proc_name_buf), proc_name_buf);
         }
     }
-    scan_timer_.setInterval(Settings::ScanFocusInter * 1000);
 }

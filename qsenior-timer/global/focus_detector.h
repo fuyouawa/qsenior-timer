@@ -7,7 +7,6 @@
 #include <QMessageBox>
 #include <QtEasyLib/QEasyEventSystem>
 #include <strsafe.h>
-#include "global/config.h"
 #include "global/event_types.h"
 
 class FocusDetector: public QObject
@@ -18,17 +17,14 @@ public:
 	static FocusDetector* const Instance;
 	~FocusDetector();
 
-	void StartScanning();
-	void StopScanning();
+	void ScanForceWindow();
 
 private:
 	TCHAR proc_name_buf[MAX_PATH];
 	TCHAR win_name_buf[MAX_PATH];
 	TCHAR prev_proc_name_buf[MAX_PATH];
 	TCHAR prev_win_name_buf[MAX_PATH];
-	QTimer scan_timer_;
 
 private:
 	FocusDetector(QObject* parent = nullptr);
-	void ScanForceWindow();
 };

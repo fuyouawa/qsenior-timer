@@ -3,6 +3,7 @@
 #include <qicon.h>
 #include <qpainter.h>
 #include <qevent.h>
+#include <QMap>
 #include "global/config.h"
 
 class TimerTableHeaderView : public QHeaderView
@@ -18,11 +19,19 @@ public:
 	void mouseReleaseEvent(QMouseEvent* event) override;
 
 private:
-	mutable QVector<QRect> filter_btns_rect_;
-	QPixmap filter_btn_pixmap;
-	QPixmap filter_btn_pressed_pixmap;
-	size_t filter_btn_pressed_idx_;
+	void PaintFilterIcon(QPainter* painter, const QRect& rect, int logical_index) const;
+	void PaintCutIcon(QPainter* painter, const QRect& rect, int logical_index) const;
+
+	mutable QMap<int, QRect> filter_btns_rect_;
+	mutable QMap<int, QRect> cut_btns_rect_;
+	QPixmap filter_pixmap_;
+	QPixmap filter_pressed_pixmap_;
+	QPixmap cut_pixmap_;
+	QPixmap cut_pressed_pixmap_;
+	int filter_btn_pressed_log_idx_;
+	int cut_btn_pressed_log_idx_;
 
 signals:
-	void filterBtnClicked(int btn_idx);
+	void filterBtnClicked(int logical_index);
+	void cutBtnClicked(int logical_index);
 };

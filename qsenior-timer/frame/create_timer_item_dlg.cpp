@@ -1,6 +1,6 @@
 ﻿#include "create_timer_item_dlg.h"
 
-CreateTimerItemDlg::CreateTimerItemDlg(QWidget* parent)
+CreateTimerItemDlg::CreateTimerItemDlg(QWidget* parent): QDialog(parent)
 {
 	ui.setupUi(this);
 }
@@ -12,12 +12,19 @@ CreateTimerItemDlg::~CreateTimerItemDlg()
 TimerItemInfo CreateTimerItemDlg::GetInfo()
 {
 	TimerItemInfo info;
-	info.timer_name = ui.edit_timer_name->text();
-	info.proc_name = ui.edit_proc_name->text();
+	info.timer_name = ui.edit_timer_name->text().trimmed();
+	info.proc_name = ui.edit_proc_name->text().trimmed();
 	info.can_del = ui.chk_can_del->isChecked();
 	info.can_pause = ui.chk_can_pause->isChecked();
+	info.can_edit = ui.chk_can_edit->isChecked();
 	info.start_imm = ui.chk_start_imm->isChecked();
+	info.status = kTimerItemStatusInit;
+	info.time = { 0, 0, 0, 0};
 	return info;
+}
+
+void CreateTimerItemDlg::on_btn_aim_process_clicked()
+{
 }
 
 void CreateTimerItemDlg::on_btn_ok_clicked()

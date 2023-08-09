@@ -2,53 +2,87 @@
 
 TimerTableHeaderView::TimerTableHeaderView(Qt::Orientation orientation, QWidget* parent) :
     QHeaderView(orientation, parent),
-    filter_btn_pressed_idx_(-1),
-    filter_btns_rect_(kTimerTableHorizontalHeaderLabels.size())
+    filter_btn_pressed_log_idx_(-1),
+    filter_pixmap_(":/pictures/filter.png"),
+    filter_pressed_pixmap_(":/pictures/filter_pressed.png"),
+    cut_pixmap_(":/pictures/cut.png"),
+    cut_pressed_pixmap_(":/pictures/cut_pressed.png")
 {
-    filter_btn_pixmap = QPixmap(":/pictures/filter.png");
-    filter_btn_pressed_pixmap = QPixmap(":/pictures/filter_pressed.png");
 }
 
 TimerTableHeaderView::~TimerTableHeaderView()
 {
 }
 
-void TimerTableHeaderView::paintSection(QPainter* painter, const QRect& rect, int logicalIndex) const
+void TimerTableHeaderView::paintSection(QPainter* painter, const QRect& rect, int logical_index) const
 {
     painter->save();
-    QHeaderView::paintSection(painter, rect, logicalIndex);
+    QHeaderView::paintSection(painter, rect, logical_index);
     painter->restore();
 
-    if (logicalIndex != kTimerItemColomnOperation)
+    switch (logical_index)
     {
-        QIcon icon = logicalIndex == filter_btn_pressed_idx_ ? filter_btn_pressed_pixmap : filter_btn_pixmap;
-        auto btn_rect = QRect(rect.right() - 22, rect.y() + 1, 20, 20);
-        icon.paint(painter, btn_rect, Qt::AlignCenter);
-        filter_btns_rect_[logicalIndex] = btn_rect;
+    case kTimerTableColomnTimerName:
+        PaintCutIcon(painter, rect, logical_index);
+        PaintFilterIcon(painter, rect, logical_index);
+        break;
+    case kTimerTableColomnTimeCounter:
+        PaintCutIcon(painter, rect, logical_index);
+        PaintFilterIcon(painter, rect, logical_index);
+        break;
+    case kTimerTableColomnStatus:
+        PaintFilterIcon(painter, rect, logical_index);
+        break;
+    default:
+        break;
     }
 }
 
 
 void TimerTableHeaderView::mousePressEvent(QMouseEvent* event)
 {
-    int index = logicalIndexAt(event->pos());
-    if (index < filter_btns_rect_.size() && filter_btns_rect_[index].contains(event->pos())) {
-        filter_btn_pressed_idx_ = index;
-        updateSection(index);
-        return;
+    int log_idx = logicalIndexAt(event->pos());
+    if (filter_btns_rect_.contains(log_idx) &&
+        filter_btns_rect_[log_idx].contains(event->pos()))
+    {
+        filter_btn_pressed_log_idx_ = log_idx;
     }
+    else if (cut_btns_rect_.contains(log_idx) &&
+        cut_btns_rect_[log_idx].contains(event->pos()))
+    {
+        cut_btn_pressed_log_idx_ = log_idx;
+    }
+    updateSection(log_idx);
     QHeaderView::mousePressEvent(event);
 }
 
 void TimerTableHeaderView::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (filter_btn_pressed_idx_ != -1) {
-        int index = logicalIndexAt(event->pos());
-        if (index == filter_btn_pressed_idx_) {
-            emit filterBtnClicked(index);
-        }
-        filter_btn_pressed_idx_ = -1;
-        updateSection(index);
+    int log_idx = logicalIndexAt(event->pos());
+    if (log_idx == filter_btn_pressed_log_idx_) {
+        emit filterBtnClicked(log_idx);
     }
+    else if (log_idx == cut_btn_pressed_log_idx_) {
+        emit cutBtnClicked(log_idx);
+    }
+    filter_btn_pressed_log_idx_ = -1;
+    cut_btn_pressed_log_idx_ = -1;
+    updateSection(log_idx);
     QHeaderView::mouseReleaseEvent(event);
+}
+
+void TimerTableHeaderView::PaintFilterIcon(QPainter* painter, const QRect& rect, int logical_index) const
+{
+    QIcon icon = logical_index == filter_btn_pressed_log_idx_ ? filter_pressed_pixmap_ : filter_pixmap_;
+    auto btn_rect = QRect(rect.right() - 22, rect.y() + 1, 20, 20);
+    icon.paint(painter, btn_rect, Qt::AlignCenter);
+    filter_btns_rect_[logical_index] = btn_rect;
+}
+
+void TimerTableHeaderView::PaintCutIcon(QPainter* painter, const QRect& rect, int logical_index) const
+{
+    QIcon icon = logical_index == cut_btn_pressed_log_idx_ ? cut_pressed_pixmap_ : cut_pixmap_;
+    auto btn_rect = QRect(rect.right() - 44, rect.y() + 1, 20, 20);
+    icon.paint(painter, btn_rect, Qt::AlignCenter);
+    cut_btns_rect_[logical_index] = btn_rect;
 }

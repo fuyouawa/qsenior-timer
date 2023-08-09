@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>708</width>
-    <height>432</height>
+    <width>787</width>
+    <height>479</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>708</width>
+     <width>787</width>
      <height>22</height>
     </rect>
    </property>
@@ -47,6 +47,8 @@
     </property>
     <addaction name="act_add_timer"/>
     <addaction name="act_del_timer"/>
+    <addaction name="act_start_timer"/>
+    <addaction name="act_pause_timer"/>
     <addaction name="act_settings"/>
    </widget>
    <widget class="QMenu" name="menu_4">
@@ -62,6 +64,7 @@
    <addaction name="menu_4"/>
    <addaction name="menu_2"/>
   </widget>
+  <widget class="QStatusBar" name="status_bar"/>
   <action name="act_graph_analyser">
    <property name="enabled">
     <bool>false</bool>
@@ -168,6 +171,25 @@
    </property>
    <property name="text">
     <string>查看隐藏项</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="act_start_timer">
+   <property name="text">
+    <string>启动所选计时器</string>
+   </property>
+   <property name="toolTip">
+    <string>启动所选计时器</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="act_pause_timer">
+   <property name="text">
+    <string>暂停所选计时器</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>

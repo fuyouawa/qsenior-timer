@@ -3,5 +3,8 @@
         <file>aim.png</file>
         <file>filter.png</file>
         <file>filter_pressed.png</file>
+        <file>cut.png</file>
+        <file>cut_pressed.png</file>
+        <file>aim.cur</file>
     </qresource>
 </RCC>

@@ -51,6 +51,12 @@
     <Filter Include="Source Files\global">
       <UniqueIdentifier>{ddf3b6c9-1505-4bec-8eab-7ecfee1b1a66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\tools">
+      <UniqueIdentifier>{5cdcbe5d-b193-40c7-a106-cc896ba3fed6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\tools">
+      <UniqueIdentifier>{38486a05-a7a1-42dd-b5ba-2e681d94355f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -77,11 +83,14 @@
     <ClCompile Include="global\focus_detector.cpp">
       <Filter>Source Files\global</Filter>
     </ClCompile>
-    <ClCompile Include="global\config.cpp">
-      <Filter>Source Files\global</Filter>
-    </ClCompile>
     <ClCompile Include="frame\settingsdlg.cpp">
       <Filter>Source Files\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="global\utils.cpp">
+      <Filter>Source Files\global</Filter>
+    </ClCompile>
+    <ClCompile Include="global\timer_controller.cpp">
+      <Filter>Source Files\global</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -135,12 +144,18 @@
     <QtMoc Include="global\focus_detector.h">
       <Filter>Header Files\global</Filter>
     </QtMoc>
+    <QtMoc Include="global\timer_controller.h">
+      <Filter>Header Files\global</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global\event_types.h">
       <Filter>Header Files\global</Filter>
     </ClInclude>
     <ClInclude Include="global\config.h">
+      <Filter>Header Files\global</Filter>
+    </ClInclude>
+    <ClInclude Include="global\utils.h">
       <Filter>Header Files\global</Filter>
     </ClInclude>
   </ItemGroup>

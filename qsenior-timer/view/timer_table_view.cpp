@@ -10,7 +10,7 @@ TimerTableView::TimerTableView(QWidget* parent) : QTableView(parent)
     setModel(model_);
     setHorizontalHeader(new TimerTableHeaderView(Qt::Horizontal, this));
     horizontalHeader()->setStretchLastSection(true);
-    horizontalHeader()->setDefaultSectionSize(150);
+    horizontalHeader()->setDefaultSectionSize(170);
     verticalHeader()->setDefaultSectionSize(10);
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);

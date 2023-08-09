@@ -32,7 +32,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>msvc</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;sql</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
@@ -55,6 +55,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <TargetName>QSeniorTimer</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
@@ -121,8 +122,9 @@
     <ClCompile Include="frame\create_timer_item_dlg.cpp" />
     <ClCompile Include="frame\mainwin.cpp" />
     <ClCompile Include="frame\settingsdlg.cpp" />
-    <ClCompile Include="global\config.cpp" />
     <ClCompile Include="global\focus_detector.cpp" />
+    <ClCompile Include="global\timer_controller.cpp" />
+    <ClCompile Include="global\utils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model\timer_table_model.cpp" />
     <ClCompile Include="view\timer_table_header_view.cpp" />
@@ -133,6 +135,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global\event_types.h" />
+    <QtMoc Include="global\timer_controller.h" />
+    <ClInclude Include="global\utils.h" />
     <QtMoc Include="global\focus_detector.h" />
     <QtMoc Include="frame\settingsdlg.h" />
     <ClInclude Include="global\config.h" />
