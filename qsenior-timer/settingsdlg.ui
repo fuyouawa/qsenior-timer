@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="tabBarAutoHide">
       <bool>false</bool>
@@ -179,27 +179,40 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>文件</string>
+       <string>高级</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="QLabel" name="label_4">
+          <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>缓存数据保存目录</string>
+            <string>捕获错误的级别</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="edit_db_file_dir"/>
-         </item>
-         <item>
-          <widget class="QToolButton" name="btn_open_db_file_path">
-           <property name="text">
-            <string>...</string>
+          <widget class="QSpinBox" name="edit_err_level">
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>2</number>
            </property>
           </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>
@@ -211,7 +224,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>183</height>
+           <height>185</height>
           </size>
          </property>
         </spacer>
@@ -236,6 +249,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="btn_ok">
+       <property name="text">
+        <string>确定</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="btn_cancel">
        <property name="text">
         <string>取消</string>
@@ -249,17 +269,27 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="btn_ok">
-       <property name="text">
-        <string>确定</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>btn_cancel</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>418</x>
+     <y>289</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>273</x>
+     <y>155</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

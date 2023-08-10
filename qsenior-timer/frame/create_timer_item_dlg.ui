@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>478</width>
-    <height>244</height>
+    <height>270</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -44,7 +44,7 @@
       <item row="1" column="1">
        <widget class="QLineEdit" name="edit_proc_name">
         <property name="placeholderText">
-         <string>必须输入完整的进程路径名! 可点击右侧按钮查找进程</string>
+         <string>按住右侧按钮移动靶心, 可自动获取进程名称</string>
         </property>
        </widget>
       </item>
@@ -54,7 +54,7 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;自动捕获器&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;长按拖拽&lt;/span&gt;到目标窗体上, 自动识别进程&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>...</string>
+         <string/>
         </property>
         <property name="icon">
          <iconset resource="../resources/res.qrc">
@@ -62,7 +62,21 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>计时器标签:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="edit_tags">
+        <property name="placeholderText">
+         <string>标签可用于分类计时器</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
        <widget class="QCheckBox" name="chk_can_del">
         <property name="text">
          <string>是否可被删除(一经创建无法修改)</string>
@@ -75,7 +89,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="2">
+      <item row="4" column="0" colspan="2">
        <widget class="QCheckBox" name="chk_can_pause">
         <property name="text">
          <string>是否可被暂停(一经创建无法修改)</string>
@@ -85,7 +99,7 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0" colspan="2">
+      <item row="5" column="0" colspan="2">
        <widget class="QCheckBox" name="chk_can_edit">
         <property name="text">
          <string>是否可被编辑(一经创建无法修改)</string>
@@ -95,7 +109,7 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <widget class="QCheckBox" name="chk_start_imm">
         <property name="text">
          <string>创建后立即运行</string>

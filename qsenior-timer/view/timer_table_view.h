@@ -4,7 +4,6 @@
 #include <qmenu.h>
 #include <qcursor.h>
 #include "timer_table_header_view.h"
-#include "frame/create_timer_item_dlg.h"
 #include "delegate/timer_item_delegrate.h"
 #include "model/timer_table_model.h"
 #include "global/config.h"

@@ -92,6 +92,12 @@
     <ClCompile Include="global\timer_controller.cpp">
       <Filter>Source Files\global</Filter>
     </ClCompile>
+    <ClCompile Include="global\config.cpp">
+      <Filter>Source Files\global</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\timerdb.cpp">
+      <Filter>Source Files\tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="frame\mainwin.ui">
@@ -108,16 +114,6 @@
     <QtRcc Include="resources\res.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="resources\qsenior-timer.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resources\qsenior-timer.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="frame\create_timer_item_dlg.h">
@@ -147,6 +143,9 @@
     <QtMoc Include="global\timer_controller.h">
       <Filter>Header Files\global</Filter>
     </QtMoc>
+    <QtMoc Include="tools\timerdb.h">
+      <Filter>Header Files\tools</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global\event_types.h">
@@ -158,5 +157,18 @@
     <ClInclude Include="global\utils.h">
       <Filter>Header Files\global</Filter>
     </ClInclude>
+    <ClInclude Include="resources\resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\qsenior-timer.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\qsenior-timer.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

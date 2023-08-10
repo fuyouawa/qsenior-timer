@@ -15,9 +15,10 @@ FocusDetector::~FocusDetector()
 {
 }
 
-void FocusDetector::ScanForceWindow()
+void FocusDetector::OnEvent(const NeedScanForceWindowEvent& event)
 {
     HWND hwnd = GetForegroundWindow();
+
     if (hwnd) {
         GetWindowText(hwnd, win_name_buf, _countof(win_name_buf));
         DWORD pid;
@@ -26,24 +27,15 @@ void FocusDetector::ScanForceWindow()
         if (hprocess) {
             DWORD proc_name_capacity = _countof(proc_name_buf);
             if (!QueryFullProcessImageName(hprocess, 0, proc_name_buf, &proc_name_capacity)) {
-                auto error = GetLastError();
-                LPTSTR err_msg = nullptr;
-                FormatMessage(
-                    FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                    NULL,
-                    error,
-                    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                    (LPTSTR)&err_msg,
-                    0,
-                    NULL);
-                QString tip_text = "无法获取当前聚焦窗体的进程!\n失败原因: %1\n错误码: %2\n可根据这个错误码前往[微软官方文档]查询以获取更多信息";
-                if (err_msg)
-                    tip_text = tip_text.arg(err_msg).arg(error);
-                else
-                    tip_text = tip_text.arg("无法分析失败原因").arg(error);
-                QMessageBox::critical(nullptr, "严重错误", tip_text);
+                ShowErrorMsg(FormatErrCode("无法获取当前聚焦窗体的进程名称!", GetLastError()), 2);
+                CloseHandle(hprocess);
+                return;
             }
             CloseHandle(hprocess);
+        }
+        else {
+            ShowErrorMsg(FormatErrCode("无法获取当前聚焦窗体的进程名称!", GetLastError()), 2);
+            return;
         }
         if (CompareStringOrdinal(win_name_buf, _countof(win_name_buf), prev_win_name_buf, _countof(prev_win_name_buf), TRUE) != CSTR_EQUAL ||
             CompareStringOrdinal(proc_name_buf, _countof(proc_name_buf), prev_proc_name_buf, _countof(prev_proc_name_buf), TRUE) != CSTR_EQUAL)

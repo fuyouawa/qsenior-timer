@@ -5,10 +5,10 @@
 
 #include <QtEasyLib/QEasyEventSystem>
 
+#include "global/event_types.h"
 #include "global/config.h"
-#include "global/focus_detector.h"
 
-class TimerController  : public QObject
+class TimerController : public QObject, QEasyEventHandler<SettingsChangedEvent>
 {
 	Q_OBJECT
 
@@ -16,13 +16,16 @@ public:
 	static TimerController* const Instance;
 	~TimerController();
 
-	void StartAll();
-	void StopAll();
+	void StartNeeded();
 
 private:
 	TimerController(QObject* parent=nullptr);
+	void UpdateAll();
+	void OnEvent(const SettingsChangedEvent& event);
+
 	QTimer focus_detector_timer_;
 	QTimer second_timer_;
 
-	void UpdateAll();
+	QTimer auto_save_local_timer_;
+
 };

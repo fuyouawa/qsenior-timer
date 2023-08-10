@@ -8,8 +8,9 @@
 #include <QtEasyLib/QEasyEventSystem>
 #include <strsafe.h>
 #include "global/event_types.h"
+#include "global/utils.h"
 
-class FocusDetector: public QObject
+class FocusDetector: public QObject, QEasyEventHandler<NeedScanForceWindowEvent>
 {
 	Q_OBJECT
 
@@ -17,13 +18,12 @@ public:
 	static FocusDetector* const Instance;
 	~FocusDetector();
 
-	void ScanForceWindow();
-
 private:
 	TCHAR proc_name_buf[MAX_PATH];
 	TCHAR win_name_buf[MAX_PATH];
 	TCHAR prev_proc_name_buf[MAX_PATH];
 	TCHAR prev_win_name_buf[MAX_PATH];
+	void OnEvent(const NeedScanForceWindowEvent& event) override;
 
 private:
 	FocusDetector(QObject* parent = nullptr);

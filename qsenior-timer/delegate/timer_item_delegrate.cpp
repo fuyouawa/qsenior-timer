@@ -16,12 +16,12 @@ void TimerItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     if (index.column() == kTimerTableColomnOperation)
     {
         QStyleOptionButton button;
-        int btn_width = option.rect.width() / kTimerItemOperationsText.size();
-        for (int i = 0; i < kTimerItemOperationsText.size(); ++i)
+        int btn_width = option.rect.width() / kTextTimerItemOperations.size();
+        for (int i = 0; i < kTextTimerItemOperations.size(); ++i)
         {
             QRect btn_rect = QRect(option.rect.left() + i * btn_width, option.rect.top(), btn_width, option.rect.height());
             button.rect = btn_rect;
-            button.text = kTimerItemOperationsText[i];
+            button.text = kTextTimerItemOperations[i];
             button.state = QStyle::State_Enabled;
 
             if (oper_btn_pressed_info_.column == index.column() && oper_btn_pressed_info_.row == index.row() && oper_btn_pressed_info_.btn_idx == i)
@@ -37,7 +37,7 @@ bool TimerItemDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, co
     if (index.column() == kTimerTableColomnOperation)
     {
         QMouseEvent* mouse_event = static_cast<QMouseEvent*>(event);
-        int btn_width = option.rect.width() / kTimerItemOperationsText.size();
+        int btn_width = option.rect.width() / kTextTimerItemOperations.size();
         int btn_idx = (mouse_event->pos().x() - option.rect.left()) / btn_width;
         switch (event->type())
         {

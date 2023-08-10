@@ -32,7 +32,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>msvc</QtInstall>
-    <QtModules>core;gui;widgets;sql</QtModules>
+    <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
@@ -68,8 +68,8 @@
     </ClCompile>
     <Link />
     <Link>
-      <AdditionalLibraryDirectories>E:\Code\C++\Framework\qt-easy-lib\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>QtEasyLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\Code\C++\Framework\qt-easy-lib\x64\Debug;$(SolutionDir)third-party\leveldb\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>QtEasyLib.lib;leveldb.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -104,12 +104,6 @@
     <QtUic Include="settingsdlg.ui" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resources\qsenior-timer.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resources\qsenior-timer.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <QtMoc Include="delegate\timer_item_delegrate.h" />
     <QtMoc Include="frame\create_timer_item_dlg.h" />
     <QtMoc Include="frame\mainwin.h" />
@@ -122,11 +116,13 @@
     <ClCompile Include="frame\create_timer_item_dlg.cpp" />
     <ClCompile Include="frame\mainwin.cpp" />
     <ClCompile Include="frame\settingsdlg.cpp" />
+    <ClCompile Include="global\config.cpp" />
     <ClCompile Include="global\focus_detector.cpp" />
     <ClCompile Include="global\timer_controller.cpp" />
     <ClCompile Include="global\utils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model\timer_table_model.cpp" />
+    <ClCompile Include="tools\timerdb.cpp" />
     <ClCompile Include="view\timer_table_header_view.cpp" />
     <ClCompile Include="view\timer_table_view.cpp" />
   </ItemGroup>
@@ -135,11 +131,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global\event_types.h" />
+    <ClInclude Include="resources\resource.h" />
+    <QtMoc Include="tools\timerdb.h" />
     <QtMoc Include="global\timer_controller.h" />
     <ClInclude Include="global\utils.h" />
     <QtMoc Include="global\focus_detector.h" />
     <QtMoc Include="frame\settingsdlg.h" />
     <ClInclude Include="global\config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\qsenior-timer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\qsenior-timer.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

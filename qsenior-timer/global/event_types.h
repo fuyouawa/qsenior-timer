@@ -2,6 +2,9 @@
 #include <QString>
 
 struct SecondUpdateEvent {};
+struct SettingsChangedEvent {};
+struct NeedScanForceWindowEvent {};
+struct NeedSaveLocalEvent {};
 
 struct FocusWindowChangedEvent {
 	QString prev_win;

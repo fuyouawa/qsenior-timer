@@ -9,19 +9,19 @@ enum TimerTableColumn
 {
 	kTimerTableColomnTimerName,
 	kTimerTableColomnTimeCounter,
+	kTimerTableColomnTags,
 	kTimerTableColomnStatus,
 	kTimerTableColomnOperation
 };
 
 enum TimerItemDataColumn
 {
-	kTimerItemDataColumnInfo,
+	kTimerItemDataColumnStoreData,
 	kTimerItemDataColumnTags
 };
 
 enum TimerItemStatus
 {
-	kTimerItemStatusInit,
 	kTimerItemStatusPaused,
 	kTimerItemStatusRunning,
 	kTimerItemStatusStanding
@@ -45,11 +45,10 @@ enum TimerTableHeaderOperatorIndex
 
 enum TimerItemFlags
 {
-	kTimerItemFlagNone = 0,
 	kTimerItemFlagCanDel = 0b0001,
 	kTimerItemFlagCanPause = 0b0010,
 	kTimerItemFlagCanEdit = 0b0100,
-	kTimerItemFlagStartImm = 0b1000
+	kTimerItemFlagIsHidden = 0b1000
 };
 
 enum TimerItemTags
@@ -58,30 +57,39 @@ enum TimerItemTags
 	kTimerItemTagIsPreviousRunning
 };
 
-struct TimerItemInfo
+struct TimerItemBasicInfo
 {
 	QString timer_name;
 	QString proc_name;
-	int status;
+	QString tags;
 	bool can_del;
 	bool can_pause;
 	bool can_edit;
 	bool start_imm;
-	struct {
-		int total;
-		int today;
-		int continuous;
-		int max_continuous;
-	} time;
 };
 
-inline const QStringList kTimerItemOperationsText = { "定时", "详细", "隐藏" };
-inline const QStringList kTimerTableHorizontalHeaderLabels = { "计时器名称", "总时间", "状态", "操作" };
-inline const QStringList kTimerItemStatusText = { "初始化中", "暂停中", "计时中", "待命中" };
+struct TimerItemStoreData
+{
+	struct DayTimer {
+		qint64 run_stamp;			// rs
+		qint64 day_time;			// dt
+		qint64 last_continuous;		// lcs
+		qint64 max_continuous;		// mcs
+	};
+	QString proc_name;				// pn
+	QString tags;					// ts
+	bool can_del;					// fs
+	bool can_pause;
+	bool can_edit;
+	bool is_hidden;
+	int status;						// ss
+	int total_time;					// tt
+	DayTimer today;					// ty
+};
 
-inline static const char* kSettingsFileName = "settings.ini";
-inline static const char* kDbConfigJsonFileName = "config.json";
-inline static const char* kDbConfigDirName = "db";
+inline const QStringList kTextTimerItemOperations = { "定时", "详细", "隐藏" };
+inline const QStringList kTextTimerTableHorizontalHeader = { "计时器名称", "总时间", "标签", "状态", "操作" };
+inline const QStringList kTextTimerItemStatus = { "暂停中", "计时中", "待命中" };
 
 class AppSettings
 {
@@ -95,5 +103,12 @@ public:
 	inline static int AutoSaveLocalInter;
 	inline static int ScanFocusInter;
 
-	inline static QString DbSaveDir;
+	inline static int ErrLevel;
+};
+
+class BasicConfig {
+public:
+	inline static QString SettingsSavePath;
+	inline static QString TimerDbSavePath;
+	inline static QString AppDataDir;
 };

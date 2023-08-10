@@ -3,6 +3,7 @@
 TimerTableHeaderView::TimerTableHeaderView(Qt::Orientation orientation, QWidget* parent) :
     QHeaderView(orientation, parent),
     filter_btn_pressed_log_idx_(-1),
+    cut_btn_pressed_log_idx_(-1),
     filter_pixmap_(":/pictures/filter.png"),
     filter_pressed_pixmap_(":/pictures/filter_pressed.png"),
     cut_pixmap_(":/pictures/cut.png"),
@@ -20,18 +21,17 @@ void TimerTableHeaderView::paintSection(QPainter* painter, const QRect& rect, in
     QHeaderView::paintSection(painter, rect, logical_index);
     painter->restore();
 
+    if (logical_index != kTimerTableColomnOperation) {
+        PaintFilterIcon(painter, rect, logical_index);
+    }
+
     switch (logical_index)
     {
     case kTimerTableColomnTimerName:
         PaintCutIcon(painter, rect, logical_index);
-        PaintFilterIcon(painter, rect, logical_index);
         break;
     case kTimerTableColomnTimeCounter:
         PaintCutIcon(painter, rect, logical_index);
-        PaintFilterIcon(painter, rect, logical_index);
-        break;
-    case kTimerTableColomnStatus:
-        PaintFilterIcon(painter, rect, logical_index);
         break;
     default:
         break;
