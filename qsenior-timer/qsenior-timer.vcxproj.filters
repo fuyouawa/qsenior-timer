@@ -98,6 +98,9 @@
     <ClCompile Include="tools\timerdb.cpp">
       <Filter>Source Files\tools</Filter>
     </ClCompile>
+    <ClCompile Include="frame\timer_info_dlg.cpp">
+      <Filter>Source Files\frame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="frame\mainwin.ui">
@@ -107,6 +110,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="settingsdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="frame\timer_info_dlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -145,6 +151,9 @@
     </QtMoc>
     <QtMoc Include="tools\timerdb.h">
       <Filter>Header Files\tools</Filter>
+    </QtMoc>
+    <QtMoc Include="frame\timer_info_dlg.h">
+      <Filter>Header Files\frame</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

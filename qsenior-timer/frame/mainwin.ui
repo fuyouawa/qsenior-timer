@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWin</class>
- <widget class="QMainWindow" name="MainWin">
+ <class>MainWinClass</class>
+ <widget class="QMainWindow" name="MainWinClass">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -49,6 +49,7 @@
     <addaction name="act_del_timer"/>
     <addaction name="act_start_timer"/>
     <addaction name="act_pause_timer"/>
+    <addaction name="separator"/>
     <addaction name="act_settings"/>
    </widget>
    <widget class="QMenu" name="menu_4">
@@ -56,6 +57,7 @@
      <string>存档</string>
     </property>
     <addaction name="act_save_local"/>
+    <addaction name="separator"/>
     <addaction name="act_user_msg"/>
     <addaction name="act_upload_server"/>
     <addaction name="act_download_server"/>

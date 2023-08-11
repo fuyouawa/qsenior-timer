@@ -3,10 +3,18 @@
 
 int main(int argc, char *argv[])
 {
+    TimerDb::Instance->Open();
+
     QApplication a(argc, argv);
     InitBasicConfig();
     ReadSettings();
-    MainWin w;
-    w.show();
-    return a.exec();
+    int res = 0;
+    {
+        MainWin w;
+        w.show();
+        res = a.exec();
+    }
+
+    TimerDb::Instance->Close();
+    return res;
 }

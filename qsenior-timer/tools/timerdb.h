@@ -13,16 +13,23 @@ class TimerDb  : public QObject
 	Q_OBJECT
 
 public:
-	TimerDb(QWidget *parent);
+	static TimerDb* const Instance;
+
 	~TimerDb();
 
 	bool Open();
 	void Close();
 
-	bool SaveDataList(const QMap<QString, TimerItemStoreData>& data_map);
+	bool SaveData(const QString& timer_name, const TimerItemStoreData& data);
 	void ForeachData(std::function<void(const QString&, const TimerItemStoreData&)> callback);
+	fustd::Option<QList<TimerItemStoreData::DayTimer>> GetTimerHistory(const QString& timer_name);
+	void ChangeTimerName(const QString& origi_timer_name, const QString& timer_name);
+
+	void SetMsgParent(QWidget* msg_parent);
 
 private:
+	TimerDb();
+
 	QJsonObject TimerItemStoreDataToJsonWithoutToday(const TimerItemStoreData& data);
 	TimerItemStoreData JsonToTimerItemStoreDataWithoutToday(const QJsonObject& obj);
 
@@ -33,6 +40,19 @@ private:
 
 	fustd::Option<TimerItemStoreData> JsonToTimerItemStoreDataSafed(const QJsonObject& obj);
 
+	fustd::Option<QList<TimerItemStoreData::DayTimer>> JsonToTimerItemStoreDataDayTimerListSafed(const QJsonArray& arr);
+
 	leveldb::DB* db_;
-	QWidget* parent_;
+	QWidget* msg_parent_;
 };
+
+#define TimerDbInstanceScope(code) \
+    TimerDb::Instance->SetMsgParent(this); \
+	code \
+	TimerDb::Instance->SetMsgParent(nullptr);
+
+#define TimerDbInstanceScope2(code) \
+    TimerDb::Instance->SetMsgParent(msg_parent_); \
+	code \
+	TimerDb::Instance->SetMsgParent(nullptr);
+	

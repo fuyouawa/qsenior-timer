@@ -7,6 +7,7 @@
 #include "delegate/timer_item_delegrate.h"
 #include "model/timer_table_model.h"
 #include "global/config.h"
+#include "frame/timer_info_dlg.h"
 
 class TimerTableView : public QTableView
 {
@@ -20,4 +21,5 @@ public:
 
 private slots:
 	void OnOperBtnClicked(int row, TimerItemOperIndex oper_idx);
+	void OnItemDoubleClicked(const QModelIndex& index);
 };

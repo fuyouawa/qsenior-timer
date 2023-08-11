@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SettingsDlg</class>
- <widget class="QDialog" name="SettingsDlg">
+ <class>SettingsDlgClass</class>
+ <widget class="QDialog" name="SettingsDlgClass">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -84,6 +84,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="chk_scan_hang_up">
+            <property name="text">
+             <string>启动挂机检测(检测鼠标是否停滞)</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -126,7 +136,7 @@
                <number>9999</number>
               </property>
               <property name="value">
-               <number>60</number>
+               <number>20</number>
               </property>
              </widget>
             </item>
@@ -154,6 +164,33 @@
               </property>
               <property name="value">
                <number>1</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>挂机判定时间</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="edit_hang_up_judge">
+              <property name="suffix">
+               <string>秒</string>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>9999</number>
+              </property>
+              <property name="value">
+               <number>10</number>
               </property>
              </widget>
             </item>
@@ -193,11 +230,17 @@
          </item>
          <item>
           <widget class="QSpinBox" name="edit_err_level">
+           <property name="suffix">
+            <string>级</string>
+           </property>
            <property name="minimum">
             <number>0</number>
            </property>
            <property name="maximum">
             <number>2</number>
+           </property>
+           <property name="value">
+            <number>1</number>
            </property>
           </widget>
          </item>
@@ -278,7 +321,7 @@
   <connection>
    <sender>btn_cancel</sender>
    <signal>clicked()</signal>
-   <receiver>SettingsDlg</receiver>
+   <receiver>SettingsDlgClass</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

@@ -27,6 +27,7 @@ public:
 	TimerItemTags GetTimerItemTags(int row);
 	void SaveTimers();
 	QString AutoFormatSecondInData(const TimerItemStoreData& data);
+	QString GetTimerName(int row);
 
 private:
 	void OnEvent(const SecondUpdateEvent& event) override;
@@ -37,7 +38,7 @@ private:
 	void UpdateTimerCount(int row);
 	void InitTimers();
 	QJsonDocument dbconfig_jsondoc_;
-	TimerDb timer_db_;
+	QWidget* msg_parent_;
 
 signals:
 	void newTimerAppended();

@@ -101,6 +101,7 @@
   <ItemGroup>
     <QtUic Include="frame\create_timer_item_dlg.ui" />
     <QtUic Include="frame\mainwin.ui" />
+    <QtUic Include="frame\timer_info_dlg.ui" />
     <QtUic Include="settingsdlg.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +117,7 @@
     <ClCompile Include="frame\create_timer_item_dlg.cpp" />
     <ClCompile Include="frame\mainwin.cpp" />
     <ClCompile Include="frame\settingsdlg.cpp" />
+    <ClCompile Include="frame\timer_info_dlg.cpp" />
     <ClCompile Include="global\config.cpp" />
     <ClCompile Include="global\focus_detector.cpp" />
     <ClCompile Include="global\timer_controller.cpp" />
@@ -130,6 +132,7 @@
     <QtRcc Include="resources\res.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="frame\timer_info_dlg.h" />
     <ClInclude Include="global\event_types.h" />
     <ClInclude Include="resources\resource.h" />
     <QtMoc Include="tools\timerdb.h" />

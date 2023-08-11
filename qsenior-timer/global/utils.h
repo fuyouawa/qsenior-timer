@@ -34,7 +34,6 @@ HDC DrawWindowBorder(HWND hwnd);
 QString FormatErrCode(QString tip, DWORD err_code);
 
 void ShowErrorMsg(QString err, int lv, QWidget* parent=nullptr);
-void ShowErrorMsg(std::string err, int lv, QWidget* parent=nullptr);
 
 std::string QStrToStl(const QString& str);
 QString StlToQStr(const std::string& stl);

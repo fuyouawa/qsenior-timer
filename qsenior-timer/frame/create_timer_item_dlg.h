@@ -24,10 +24,10 @@ private:
 	void SetProcName(HWND hwnd);
 	void BeginScan();
 	void EndScan();
-	Ui::CreateTimerItemDlg ui;
 	HWND prev_hwnd_;
 	bool is_pessing_;
 	QIcon aim_icon_;
+	Ui::CreateTimerItemDlgClass ui;
 
 private slots:
 	void on_btn_ok_clicked();

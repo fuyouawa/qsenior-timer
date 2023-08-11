@@ -24,7 +24,8 @@ enum TimerItemStatus
 {
 	kStatusPaused,
 	kStatusRunning,
-	kStatusStanding
+	kStatusStanding,
+	kStatusHangup
 };
 
 enum TimerItemOperIndex
@@ -96,8 +97,8 @@ struct TimerItemStoreData
 };
 
 inline const QStringList kTextTimerItemOperations = { "定时", "详细", "隐藏" };
-inline const QStringList kTextTimerTableHorizontalHeader = { "计时器名称", "总时间", "标签", "状态", "操作" };
-inline const QStringList kTextTimerItemStatus = { "暂停中", "计时中", "待命中" };
+inline const QStringList kTextTimerTableHorizontalHeader = { "计时器名称", "总使用时间", "标签", "状态", "操作" };
+inline const QStringList kTextTimerItemStatus = { "暂停中", "计时中", "待命中", "挂机中"};
 
 class AppSettings
 {

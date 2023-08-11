@@ -2,10 +2,9 @@
 
 TimerTableModel::TimerTableModel(QWidget* parent):
     QStandardItemModel(parent),
-    timer_db_(parent)
+    msg_parent_(parent)
 {
 	setHorizontalHeaderLabels(kTextTimerTableHorizontalHeader);
-    timer_db_.Open();
     InitTimers();
 }
 
@@ -14,7 +13,6 @@ TimerTableModel::~TimerTableModel()
     if (AppSettings::AutoCloseSave) {
         SaveTimers();
     }
-    timer_db_.Close();
 }
 
 void TimerTableModel::InsertTimer(const TimerItemBasicInfo& info)
@@ -25,8 +23,8 @@ void TimerTableModel::InsertTimer(const TimerItemBasicInfo& info)
 void TimerTableModel::InsertTimer(const QString& timer_name, const TimerItemStoreData& data, bool start_imm)
 {
     for (size_t i = 0; i < rowCount(); i++) {
-        if (item(i, kColumnTimerName)->text() == timer_name) {
-            QMessageBox::warning((QWidget*)parent(), "错误", "添加计时器失败!\n原因: 已有相同名称的计时器!");
+        if (GetTimerName(i) == timer_name) {
+            QMessageBox::warning(msg_parent_, "错误", "添加计时器失败!\n原因: 已有相同名称的计时器!");
             return;
         }
     }
@@ -76,12 +74,13 @@ TimerItemTags TimerTableModel::GetTimerItemTags(int row)
 void TimerTableModel::SaveTimers()
 {
     QMap<QString, TimerItemStoreData> total;
-    for (size_t i = 0; i < rowCount(); i++) {
-        auto data = *GetTimerItemStoreData(i);
-        auto name = item(i, kColumnTimerName)->text();
-        total[name] = std::move(data);
-    }
-    timer_db_.SaveDataList(total);
+    TimerDbInstanceScope2(
+        for (size_t i = 0; i < rowCount(); i++) {
+            if (!TimerDb::Instance->SaveData(GetTimerName(i), *GetTimerItemStoreData(i))) {
+                return;
+            }
+        }
+    )
 }
 
 QString TimerTableModel::AutoFormatSecondInData(const TimerItemStoreData& data)
@@ -95,6 +94,11 @@ QString TimerTableModel::AutoFormatSecondInData(const TimerItemStoreData& data)
     default:
         return FormatSeconds(data.today.last_continuous);
     }
+}
+
+QString TimerTableModel::GetTimerName(int row)
+{
+    return item(row, kColumnTimerName)->text();
 }
 
 void TimerTableModel::OnEvent(const SecondUpdateEvent& event)
@@ -145,7 +149,9 @@ void TimerTableModel::UpdateTimerCount(int row)
 
 void TimerTableModel::InitTimers()
 {
-    timer_db_.ForeachData([this](const QString& timer_name, const TimerItemStoreData& data) {
-        InsertTimer(timer_name, data, true);
-        });
+    TimerDbInstanceScope2(
+        TimerDb::Instance->ForeachData([this](const QString& timer_name, const TimerItemStoreData& data) {
+            InsertTimer(timer_name, data, true);
+            });
+    )
 }

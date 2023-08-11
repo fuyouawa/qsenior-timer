@@ -22,11 +22,12 @@ MainWin::MainWin(QWidget* parent)
 }
 
 MainWin::~MainWin()
-{}
+{
+}
 
 void MainWin::on_act_add_timer_triggered()
 {
-    CreateTimerItemDlg dlg(this);
+    CreateTimerItemDlg dlg{ this };
     if (dlg.exec() == QDialog::Accepted) {
         timer_table_->model_->InsertTimer(dlg.GetInfo());
     }
@@ -34,7 +35,8 @@ void MainWin::on_act_add_timer_triggered()
 
 void MainWin::on_act_settings_triggered()
 {
-    
+    SettingsDlg dlg{ this };
+    dlg.exec();
 }
 
 void MainWin::on_act_save_local_triggered()

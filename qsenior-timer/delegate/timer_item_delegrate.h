@@ -23,5 +23,5 @@ private:
     } oper_btn_pressed_info_;
 
 signals:
-    void operBtnClicked(const QModelIndex& index, TimerItemOperIndex oper_idx);
+    void operBtnClicked(int row, TimerItemOperIndex oper_idx);
 };

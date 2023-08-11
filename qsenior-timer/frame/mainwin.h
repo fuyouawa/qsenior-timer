@@ -26,7 +26,7 @@ private slots:
     void OnTimerTableSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 
 private:
-    Ui::MainWin ui;
+    Ui::MainWinClass ui;
     TimerTableView* timer_table_;
     QLabel* label_timer_info_;
 };

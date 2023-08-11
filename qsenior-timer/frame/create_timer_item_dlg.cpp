@@ -16,7 +16,7 @@ CreateTimerItemDlg::~CreateTimerItemDlg()
 
 TimerItemBasicInfo CreateTimerItemDlg::GetInfo()
 {
-	TimerItemBasicInfo info;
+	TimerItemBasicInfo info{};
 	info.timer_name = ui.edit_timer_name->text().trimmed();
 	info.proc_name = ui.edit_proc_name->text().trimmed();
 	info.tags = ui.edit_tags->text().trimmed();
@@ -24,6 +24,7 @@ TimerItemBasicInfo CreateTimerItemDlg::GetInfo()
 	info.can_pause = ui.chk_can_pause->isChecked();
 	info.can_edit = ui.chk_can_edit->isChecked();
 	info.start_imm = ui.chk_start_imm->isChecked();
+	info.julian_data = QDate::currentDate().toJulianDay();
 	return info;
 }
 

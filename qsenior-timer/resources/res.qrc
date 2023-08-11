@@ -6,5 +6,6 @@
         <file>cut.png</file>
         <file>cut_pressed.png</file>
         <file>aim.cur</file>
+        <file>tip.png</file>
     </qresource>
 </RCC>

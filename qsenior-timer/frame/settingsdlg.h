@@ -24,5 +24,5 @@ private slots:
 private:
 	void MappingToConfig();
 
-	Ui::SettingsDlg ui;
+	Ui::SettingsDlgClass ui;
 };

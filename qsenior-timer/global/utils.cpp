@@ -179,11 +179,6 @@ void ShowErrorMsg(QString err, int lv, QWidget* parent)
 	}
 }
 
-void ShowErrorMsg(std::string err, int lv, QWidget* parent)
-{
-	ShowErrorMsg(QString::fromStdString(err), lv, parent);
-}
-
 bool IsSameDayTimeStamps(qint64 stamp1, qint64 stamp2)
 {
 	auto date1 = QDateTime::fromSecsSinceEpoch(stamp1);
