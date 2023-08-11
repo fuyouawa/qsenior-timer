@@ -19,26 +19,26 @@ TimerTableModel::~TimerTableModel()
 
 void TimerTableModel::InsertTimer(const TimerItemBasicInfo& info)
 {
-    InsertTimer(info.proc_name, TimerItemBasicInfoToStoreData(info), info.start_imm);
+    InsertTimer(info.timer_name, TimerItemBasicInfoToStoreData(info), info.start_imm);
 }
 
 void TimerTableModel::InsertTimer(const QString& timer_name, const TimerItemStoreData& data, bool start_imm)
 {
     for (size_t i = 0; i < rowCount(); i++) {
-        if (item(i, kTimerTableColomnTimerName)->text() == timer_name) {
+        if (item(i, kColumnTimerName)->text() == timer_name) {
             QMessageBox::warning((QWidget*)parent(), "错误", "添加计时器失败!\n原因: 已有相同名称的计时器!");
             return;
         }
     }
     auto item1 = new QStandardItem(timer_name);
     auto store = new TimerItemStoreData(data);
-    store->status = start_imm ? kTimerItemStatusStanding : kTimerItemStatusPaused;
+    store->status = start_imm ? kStatusStanding : kStatusPaused;
     item1->setData((qulonglong)store, Qt::UserRole);
     item1->setTextAlignment(Qt::AlignCenter);
     item1->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
 
-    auto item2 = new QStandardItem("0天00时00分00秒");
-    item2->setData(kTimerItemTagNone, Qt::UserRole);
+    auto item2 = new QStandardItem(AutoFormatSecondInData(data));
+    item2->setData(kTagIsPreviousRunning, Qt::UserRole);
     item2->setTextAlignment(Qt::AlignCenter);
     item2->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
 
@@ -60,17 +60,17 @@ void TimerTableModel::InsertTimer(const QString& timer_name, const TimerItemStor
 
 TimerItemStoreData* TimerTableModel::GetTimerItemStoreData(int row)
 {
-    return (TimerItemStoreData*)item(row, kTimerItemDataColumnStoreData)->data(Qt::UserRole).toULongLong();
+    return (TimerItemStoreData*)item(row, kDataStore)->data(Qt::UserRole).toULongLong();
 }
 
 void TimerTableModel::SetTimerItemTags(int row, TimerItemTags tags)
 {
-    item(row, kTimerItemDataColumnTags)->setData((int)tags, Qt::UserRole);
+    item(row, kDataTags)->setData((int)tags, Qt::UserRole);
 }
 
 TimerItemTags TimerTableModel::GetTimerItemTags(int row)
 {
-    return (TimerItemTags)item(row, kTimerItemDataColumnTags)->data(Qt::UserRole).toInt();
+    return (TimerItemTags)item(row, kDataTags)->data(Qt::UserRole).toInt();
 }
 
 void TimerTableModel::SaveTimers()
@@ -78,20 +78,33 @@ void TimerTableModel::SaveTimers()
     QMap<QString, TimerItemStoreData> total;
     for (size_t i = 0; i < rowCount(); i++) {
         auto data = *GetTimerItemStoreData(i);
-        auto name = item(i, kTimerTableColomnTimerName)->text();
+        auto name = item(i, kColumnTimerName)->text();
         total[name] = std::move(data);
     }
     timer_db_.SaveDataList(total);
+}
+
+QString TimerTableModel::AutoFormatSecondInData(const TimerItemStoreData& data)
+{
+    switch (ViewSettings::TimeCounterModel)
+    {
+    case kViewModelTotalTime:
+        return FormatSeconds(data.total_time);
+    case kViewModelTodayTime:
+        return FormatSeconds(data.today.day_time);
+    default:
+        return FormatSeconds(data.today.last_continuous);
+    }
 }
 
 void TimerTableModel::OnEvent(const SecondUpdateEvent& event)
 {
     for (size_t i = 0; i < rowCount(); i++) {
         auto data = GetTimerItemStoreData(i);
-        if (data->status == kTimerItemStatusRunning) {
-            if (GetTimerItemTags(i) == kTimerItemTagIsPreviousRunning) {
+        if (data->status == kStatusRunning) {
+            if (GetTimerItemTags(i) == kTagIsPreviousRunning) {
                 data->today.last_continuous = 0;
-                SetTimerItemTags(i, kTimerItemTagNone);
+                SetTimerItemTags(i, kTagNone);
             }
             ++data->total_time;
             ++data->today.day_time;
@@ -107,15 +120,15 @@ void TimerTableModel::OnEvent(const FocusWindowChangedEvent& event)
 {
     for (size_t i = 0; i < rowCount(); i++) {
         auto data = GetTimerItemStoreData(i);
-        if (data->status != kTimerItemStatusPaused) {
+        if (data->status != kStatusPaused) {
             if (data->proc_name == event.cur_proc) {
-                data->status = kTimerItemStatusRunning;
+                data->status = kStatusRunning;
             }
             else if (data->proc_name == event.prev_proc) {
-                data->status = kTimerItemStatusStanding;
-                SetTimerItemTags(i, kTimerItemTagIsPreviousRunning);
+                data->status = kStatusStanding;
+                SetTimerItemTags(i, kTagIsPreviousRunning);
             }
-            item(i, kTimerTableColomnStatus)->setText(kTextTimerItemStatus[data->status]);
+            item(i, kColumnStatus)->setText(kTextTimerItemStatus[data->status]);
         }
     }
 }
@@ -127,8 +140,7 @@ void TimerTableModel::OnEvent(const NeedSaveLocalEvent& event)
 
 void TimerTableModel::UpdateTimerCount(int row)
 {
-    auto data = GetTimerItemStoreData(row);
-    item(row, kTimerTableColomnTimeCounter)->setText(FormatSeconds(data->total_time));
+    item(row, kColumnTimeCounter)->setText(AutoFormatSecondInData(*GetTimerItemStoreData(row)));
 }
 
 void TimerTableModel::InitTimers()

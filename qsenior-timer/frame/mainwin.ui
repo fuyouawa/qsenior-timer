@@ -55,9 +55,10 @@
     <property name="title">
      <string>存档</string>
     </property>
+    <addaction name="act_save_local"/>
     <addaction name="act_user_msg"/>
-    <addaction name="act_upload"/>
-    <addaction name="act_download"/>
+    <addaction name="act_upload_server"/>
+    <addaction name="act_download_server"/>
    </widget>
    <addaction name="menu_3"/>
    <addaction name="menu"/>
@@ -141,17 +142,20 @@
     <enum>QAction::NoRole</enum>
    </property>
   </action>
-  <action name="act_upload">
+  <action name="act_upload_server">
    <property name="text">
-    <string>上传存档</string>
+    <string>上传存档(云端)</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
    </property>
   </action>
-  <action name="act_download">
+  <action name="act_download_server">
    <property name="text">
-    <string>下载存档</string>
+    <string>下载存档(云端)</string>
+   </property>
+   <property name="toolTip">
+    <string>下载存档(云端)</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
@@ -190,6 +194,14 @@
   <action name="act_pause_timer">
    <property name="text">
     <string>暂停所选计时器</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="act_save_local">
+   <property name="text">
+    <string>保存存档(本地)</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>

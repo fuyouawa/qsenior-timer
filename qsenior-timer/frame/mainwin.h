@@ -21,6 +21,7 @@ private slots:
     void on_act_del_timer_triggered();
     void on_act_add_timer_triggered();
     void on_act_settings_triggered();
+    void on_act_save_local_triggered();
 
     void OnTimerTableSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 

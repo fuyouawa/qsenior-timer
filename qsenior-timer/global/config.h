@@ -7,54 +7,61 @@
 
 enum TimerTableColumn
 {
-	kTimerTableColomnTimerName,
-	kTimerTableColomnTimeCounter,
-	kTimerTableColomnTags,
-	kTimerTableColomnStatus,
-	kTimerTableColomnOperation
+	kColumnTimerName,
+	kColumnTimeCounter,
+	kColumnTags,
+	kColumnStatus,
+	kColumnOperations
 };
 
 enum TimerItemDataColumn
 {
-	kTimerItemDataColumnStoreData,
-	kTimerItemDataColumnTags
+	kDataStore,
+	kDataTags
 };
 
 enum TimerItemStatus
 {
-	kTimerItemStatusPaused,
-	kTimerItemStatusRunning,
-	kTimerItemStatusStanding
+	kStatusPaused,
+	kStatusRunning,
+	kStatusStanding
 };
 
-enum TimerItemOperatorIndex
+enum TimerItemOperIndex
 {
-	kTimerItemOperatorTimer,
-	kTimerItemOperatorShowMessage,
-	kTimerItemOperatorHidden
+	kOperIndexTimer,
+	kOperIndexShowMessage,
+	kOperIndexHidden
 };
 
 enum TimerTableHeaderOperatorIndex
 {
-	kTimerTableHeaderOperatorCutNameMode,
-	kTimerTableHeaderOperatorFilterName,
-	kTimerTableHeaderOperatorCutTimeCounterMode,
-	kTimerTableHeaderOperatorFilterTimeCount,
-	kTimerTableHeaderOperatorFilterStatus
+	kOperIndexCutNameMode,
+	kOperIndexFilterName,
+	kOperIndexCutTimeCounterMode,
+	kOperIndexFilterTimeCount,
+	kOperIndexFilterStatus
 };
 
 enum TimerItemFlags
 {
-	kTimerItemFlagCanDel = 0b0001,
-	kTimerItemFlagCanPause = 0b0010,
-	kTimerItemFlagCanEdit = 0b0100,
-	kTimerItemFlagIsHidden = 0b1000
+	kFlagCanDel = 0b0001,
+	kFlagCanPause = 0b0010,
+	kFlagCanEdit = 0b0100,
+	kFlagIsHidden = 0b1000
 };
 
 enum TimerItemTags
 {
-	kTimerItemTagNone,
-	kTimerItemTagIsPreviousRunning
+	kTagNone,
+	kTagIsPreviousRunning
+};
+
+enum TimerTableHeaderTimeCounterViewModel
+{
+	kViewModelTotalTime,
+	kViewModelTodayTime,
+	kViewModelTodayContinuous
 };
 
 struct TimerItemBasicInfo
@@ -66,12 +73,13 @@ struct TimerItemBasicInfo
 	bool can_pause;
 	bool can_edit;
 	bool start_imm;
+	qint64 julian_data;
 };
 
 struct TimerItemStoreData
 {
 	struct DayTimer {
-		qint64 run_stamp;			// rs
+		qint64 julian_date;			// jd
 		qint64 day_time;			// dt
 		qint64 last_continuous;		// lcs
 		qint64 max_continuous;		// mcs
@@ -111,4 +119,11 @@ public:
 	inline static QString SettingsSavePath;
 	inline static QString TimerDbSavePath;
 	inline static QString AppDataDir;
+};
+
+
+class ViewSettings
+{
+public:
+	inline static TimerTableHeaderTimeCounterViewModel TimeCounterModel;
 };

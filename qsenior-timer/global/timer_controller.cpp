@@ -11,13 +11,13 @@ TimerController::TimerController(QObject *parent)
     second_timer_.setInterval(1000);
 
     connect(&focus_detector_timer_, &QTimer::timeout, [this]() {
-        QEasyEventBus::Emit(NeedScanForceWindowEvent());
+        QEasyEventBus::EmitAsync(NeedScanForceWindowEvent());
         });
     connect(&second_timer_, &QTimer::timeout, [this]() {
-        QEasyEventBus::Emit(SecondUpdateEvent());
+        QEasyEventBus::EmitAsync(SecondUpdateEvent());
         });
     connect(&auto_save_local_timer_, &QTimer::timeout, [this]() {
-        QEasyEventBus::Emit(NeedSaveLocalEvent());
+        QEasyEventBus::EmitAsync(NeedSaveLocalEvent());
         });
 }
 

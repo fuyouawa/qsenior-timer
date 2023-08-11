@@ -36,14 +36,6 @@ QString FormatErrCode(QString tip, DWORD err_code);
 void ShowErrorMsg(QString err, int lv, QWidget* parent=nullptr);
 void ShowErrorMsg(std::string err, int lv, QWidget* parent=nullptr);
 
-QJsonObject TimerItemStoreDataToJson(const TimerItemStoreData& data);
-TimerItemStoreData JsonToTimerItemStoreData(const QJsonObject& obj);
-
-QJsonObject TimerItemStoreDataDayTimerToJson(const TimerItemStoreData::DayTimer& timer);
-TimerItemStoreData::DayTimer JsonToTimerItemStoreDataDayTimer(const QJsonObject& obj);
-
-bool IsSameDayTimeStamps(qint64 stamp1, qint64 stamp2);
-
 std::string QStrToStl(const QString& str);
 QString StlToQStr(const std::string& stl);
 QByteArray StlToQBytes(const std::string& stl);

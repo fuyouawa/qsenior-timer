@@ -184,75 +184,6 @@ void ShowErrorMsg(std::string err, int lv, QWidget* parent)
 	ShowErrorMsg(QString::fromStdString(err), lv, parent);
 }
 
-QJsonObject TimerItemStoreDataToJson(const TimerItemStoreData& data)
-{
-	QJsonObject obj;
-
-	obj["pn"] = data.proc_name;
-	obj["ts"] = data.tags;
-	obj["ss"] = data.status;
-	obj["tt"] = data.total_time;
-
-	obj["ty"] = TimerItemStoreDataDayTimerToJson(data.today);
-
-	int flags = 0;
-	if (data.can_del) {
-		flags |= kTimerItemFlagCanDel;
-	}
-	if (data.can_pause) {
-		flags |= kTimerItemFlagCanPause;
-	}
-	if (data.can_edit) {
-		flags |= kTimerItemFlagCanEdit;
-	}
-	if (data.is_hidden) {
-		flags |= kTimerItemFlagIsHidden;
-	}
-	obj["fs"] = flags;
-
-	return obj;
-}
-
-TimerItemStoreData JsonToTimerItemStoreData(const QJsonObject& obj)
-{
-	TimerItemStoreData data;
-
-	data.proc_name = obj["pn"].toString();
-	data.tags = obj["ts"].toString();
-	data.status = static_cast<char>(obj["ss"].toInt());
-	data.total_time = obj["tt"].toInt();
-
-	data.today = JsonToTimerItemStoreDataDayTimer(obj["ty"].toObject());
-
-	int flags = obj["fs"].toInt();
-	data.can_del = flags & kTimerItemFlagCanDel;
-	data.can_pause = flags & kTimerItemFlagCanPause;
-	data.can_edit = flags & kTimerItemFlagCanEdit;
-	data.is_hidden = flags & kTimerItemFlagIsHidden;
-
-	return data;
-}
-
-QJsonObject TimerItemStoreDataDayTimerToJson(const TimerItemStoreData::DayTimer& timer)
-{
-	QJsonObject day_timer_obj;
-	day_timer_obj["rs"] = timer.run_stamp;
-	day_timer_obj["dt"] = timer.day_time;
-	day_timer_obj["lcs"] = timer.last_continuous;
-	day_timer_obj["mcs"] = timer.max_continuous;
-	return day_timer_obj;
-}
-
-TimerItemStoreData::DayTimer JsonToTimerItemStoreDataDayTimer(const QJsonObject& obj)
-{
-	TimerItemStoreData::DayTimer timer;
-	timer.run_stamp = obj["rs"].toVariant().toLongLong();
-	timer.day_time = obj["dt"].toVariant().toLongLong();
-	timer.last_continuous = obj["lcs"].toVariant().toLongLong();
-	timer.max_continuous = obj["mcs"].toVariant().toLongLong();
-	return timer;
-}
-
 bool IsSameDayTimeStamps(qint64 stamp1, qint64 stamp2)
 {
 	auto date1 = QDateTime::fromSecsSinceEpoch(stamp1);
@@ -285,6 +216,7 @@ TimerItemStoreData TimerItemBasicInfoToStoreData(const TimerItemBasicInfo& info)
 	store.can_del = info.can_del;
 	store.can_edit = info.can_edit;
 	store.can_pause = info.can_pause;
+	store.today.julian_date = info.julian_data;
 	return store;
 }
 
@@ -297,5 +229,6 @@ TimerItemBasicInfo TimerItemStoreDataToBasicInfo(const QString& timer_name, cons
 	info.can_pause = data.can_pause;
 	info.tags = data.tags;
 	info.timer_name = timer_name;
+	info.julian_data = data.today.julian_date;
 	return info;
 }

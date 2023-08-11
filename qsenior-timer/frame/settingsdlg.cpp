@@ -22,7 +22,7 @@ void SettingsDlg::MappingToConfig()
 
 	SaveSettings();
 
-	QEasyEventBus::Emit(SettingsChangedEvent());
+	QEasyEventBus::EmitAsync(SettingsChangedEvent());
 }
 
 void SettingsDlg::on_btn_apply_clicked()

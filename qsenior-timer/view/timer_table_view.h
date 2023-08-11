@@ -17,4 +17,7 @@ public:
 	~TimerTableView();
 
 	TimerTableModel* model_;
+
+private slots:
+	void OnOperBtnClicked(int row, TimerItemOperIndex oper_idx);
 };

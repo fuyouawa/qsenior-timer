@@ -45,7 +45,7 @@ void FocusDetector::OnEvent(const NeedScanForceWindowEvent& event)
             tmp.cur_proc = QString::fromWCharArray(proc_name_buf);
             tmp.prev_win = QString::fromWCharArray(prev_win_name_buf);
             tmp.prev_proc = QString::fromWCharArray(prev_proc_name_buf);
-            QEasyEventBus::Emit(tmp);
+            QEasyEventBus::EmitAsync(std::move(tmp));
             StringCchCopy(prev_win_name_buf, _countof(prev_win_name_buf), win_name_buf);
             StringCchCopy(prev_proc_name_buf, _countof(prev_proc_name_buf), proc_name_buf);
         }

@@ -26,6 +26,7 @@ public:
 	void SetTimerItemTags(int row, TimerItemTags tags);
 	TimerItemTags GetTimerItemTags(int row);
 	void SaveTimers();
+	QString AutoFormatSecondInData(const TimerItemStoreData& data);
 
 private:
 	void OnEvent(const SecondUpdateEvent& event) override;

@@ -37,6 +37,12 @@ void MainWin::on_act_settings_triggered()
     
 }
 
+void MainWin::on_act_save_local_triggered()
+{
+    timer_table_->model_->SaveTimers();
+    QMessageBox::information(this, "提示", "保存成功!");
+}
+
 void MainWin::on_act_del_timer_triggered()
 {
 }
@@ -46,7 +52,7 @@ void MainWin::OnTimerTableSelectionChanged(const QItemSelection& selected, const
     ui.act_del_timer->setEnabled(timer_table_->currentIndex().isValid());
     auto row = selected.indexes()[0].row();
     auto data = timer_table_->model_->GetTimerItemStoreData(row);
-    auto timer_name = timer_table_->model_->item(row, kTimerTableColomnTimerName)->text();
+    auto timer_name = timer_table_->model_->item(row, kColumnTimerName)->text();
     QString format = "所选计时器: <b>%1</b>\t绑定的进程名: <b>%2</b>";
     label_timer_info_->setText(format.arg(timer_name).arg(data->proc_name));
 }

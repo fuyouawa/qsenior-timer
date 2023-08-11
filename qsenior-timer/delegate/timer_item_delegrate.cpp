@@ -13,7 +13,7 @@ TimerItemDelegate::~TimerItemDelegate()
 void TimerItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     QStyledItemDelegate::paint(painter, option, index);
-    if (index.column() == kTimerTableColomnOperation)
+    if (index.column() == kColumnOperations)
     {
         QStyleOptionButton button;
         int btn_width = option.rect.width() / kTextTimerItemOperations.size();
@@ -34,7 +34,7 @@ void TimerItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 
 bool TimerItemDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
-    if (index.column() == kTimerTableColomnOperation)
+    if (index.column() == kColumnOperations)
     {
         QMouseEvent* mouse_event = static_cast<QMouseEvent*>(event);
         int btn_width = option.rect.width() / kTextTimerItemOperations.size();
@@ -46,7 +46,7 @@ bool TimerItemDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, co
             return true;
         case QEvent::MouseButtonRelease:
             if (btn_idx == oper_btn_pressed_info_.btn_idx) {
-                emit operBtnClicked(index, (TimerItemOperatorIndex)btn_idx);
+                emit operBtnClicked(index.row(), (TimerItemOperIndex)btn_idx);
             }
             oper_btn_pressed_info_ = { -1, -1, -1 };
             return true;

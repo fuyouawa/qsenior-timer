@@ -21,16 +21,13 @@ void TimerTableHeaderView::paintSection(QPainter* painter, const QRect& rect, in
     QHeaderView::paintSection(painter, rect, logical_index);
     painter->restore();
 
-    if (logical_index != kTimerTableColomnOperation) {
+    if (logical_index != kColumnOperations) {
         PaintFilterIcon(painter, rect, logical_index);
     }
 
     switch (logical_index)
     {
-    case kTimerTableColomnTimerName:
-        PaintCutIcon(painter, rect, logical_index);
-        break;
-    case kTimerTableColomnTimeCounter:
+    case kColumnTimeCounter:
         PaintCutIcon(painter, rect, logical_index);
         break;
     default:
