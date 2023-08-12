@@ -19,76 +19,72 @@
      <property name="title">
       <string>基本信息</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="edit_tags">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>绑定的进程名称</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>计时器名称</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="edit_timer_name">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>标签</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="edit_proc_name">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="Line" name="line">
-        <property name="frameShadow">
-         <enum>QFrame::Sunken</enum>
-        </property>
-        <property name="lineWidth">
-         <number>1</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>标签</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QLabel" name="lab_flags">
-        <property name="minimumSize">
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="edit_tags">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>计时器名称</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
          <size>
-          <width>200</width>
-          <height>0</height>
+          <width>243</width>
+          <height>20</height>
          </size>
         </property>
+       </spacer>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="edit_timer_name">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>243</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;是否可被删除&lt;span style=&quot; font-weight:700;&quot;&gt;: 否&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;是否可被暂停&lt;span style=&quot; font-weight:700;&quot;&gt;: 否&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;是否可被编辑&lt;span style=&quot; font-weight:700;&quot;&gt;: 否&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>绑定的进程名称</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QLineEdit" name="edit_proc_name">
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -119,12 +115,18 @@
      </item>
      <item>
       <widget class="QToolButton" name="btn_load_histroy_tip">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="../resources/res.qrc">
          <normaloff>:/pictures/tip.png</normaloff>:/pictures/tip.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
        </property>
       </widget>
      </item>

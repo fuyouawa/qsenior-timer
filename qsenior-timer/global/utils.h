@@ -2,6 +2,8 @@
 #include <QWidget>
 #include <QJsonDocument>
 #include <QMessageBox>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QApplication>
@@ -39,6 +41,4 @@ std::string QStrToStl(const QString& str);
 QString StlToQStr(const std::string& stl);
 QByteArray StlToQBytes(const std::string& stl);
 
-TimerItemStoreData TimerItemBasicInfoToStoreData(const TimerItemBasicInfo& info);
-
-TimerItemBasicInfo TimerItemStoreDataToBasicInfo(const QString& timer_name, const TimerItemStoreData& data);
+void AutoRegistryStartup();

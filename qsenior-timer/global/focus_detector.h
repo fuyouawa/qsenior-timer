@@ -5,12 +5,13 @@
 #include <Windows.h>
 #include <QTimer>
 #include <QMessageBox>
-#include <QtEasyLib/QEasyEventSystem>
 #include <strsafe.h>
 #include "global/event_types.h"
 #include "global/utils.h"
 
-class FocusDetector: public QObject, QEasyEventHandler<NeedScanForceWindowEvent>
+class TimerController;
+
+class FocusDetector: public QObject
 {
 	Q_OBJECT
 
@@ -18,12 +19,22 @@ public:
 	static FocusDetector* const Instance;
 	~FocusDetector();
 
+	QString CurProcName();
+	QString PrevProcName();
+
+	QString CurWinName();
+	QString PrevWinName();
+
+	void ScanForceWindow();
+
 private:
+	friend class TimerController;
+
 	TCHAR proc_name_buf[MAX_PATH];
 	TCHAR win_name_buf[MAX_PATH];
 	TCHAR prev_proc_name_buf[MAX_PATH];
 	TCHAR prev_win_name_buf[MAX_PATH];
-	void OnEvent(const NeedScanForceWindowEvent& event) override;
+	QTimer timer_;
 
 private:
 	FocusDetector(QObject* parent = nullptr);

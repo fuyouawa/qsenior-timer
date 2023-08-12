@@ -1,7 +1,7 @@
 ﻿#include "timer_table_header_view.h"
 
-TimerTableHeaderView::TimerTableHeaderView(Qt::Orientation orientation, QWidget* parent) :
-    QHeaderView(orientation, parent),
+TimerTableHeaderView::TimerTableHeaderView(QWidget* parent) :
+    QHeaderView(Qt::Horizontal, parent),
     filter_btn_pressed_log_idx_(-1),
     cut_btn_pressed_log_idx_(-1),
     filter_pixmap_(":/pictures/filter.png"),

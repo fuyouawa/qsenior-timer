@@ -20,9 +20,6 @@ TimerItemBasicInfo CreateTimerItemDlg::GetInfo()
 	info.timer_name = ui.edit_timer_name->text().trimmed();
 	info.proc_name = ui.edit_proc_name->text().trimmed();
 	info.tags = ui.edit_tags->text().trimmed();
-	info.can_del = ui.chk_can_del->isChecked();
-	info.can_pause = ui.chk_can_pause->isChecked();
-	info.can_edit = ui.chk_can_edit->isChecked();
 	info.start_imm = ui.chk_start_imm->isChecked();
 	info.julian_data = QDate::currentDate().toJulianDay();
 	return info;
@@ -101,7 +98,7 @@ void CreateTimerItemDlg::on_btn_ok_clicked()
 	{
 		QMessageBox::warning(this, "警告", "您还有项没填写!");
 	}
-	else if (QMessageBox::question(this, "询问", "你确定要创建吗, 部分选项一经创建无法修改!") == QMessageBox::Yes) {
+	else if (QMessageBox::question(this, "询问", "你确定要创建吗, [要绑定的进程名称]一经创建无法修改!\n并且计时器无法被删除, 新计时器也会立即存入缓存, 无法撤销!") == QMessageBox::Yes) {
 		accept();
 	}
 }

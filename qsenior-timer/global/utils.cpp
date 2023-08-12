@@ -47,31 +47,43 @@ QString FormatSeconds(int sec)
 void ReadSettings()
 {
 	QSettings settings{ BasicConfig::SettingsSavePath, QSettings::IniFormat };
+	settings.beginGroup("Gereral");
 	AppSettings::Startup = settings.value("Startup", true).toBool();
-	AppSettings::RunInBg = settings.value("RunInBg", true).toBool();
+	AppSettings::RunInTray = settings.value("RunInTray", true).toBool();
 	AppSettings::AutoCloseSave = settings.value("AutoCloseSave", true).toBool();
-	AppSettings::TimerSaveLocal = settings.value("TimerSaveLocal", true).toBool();
+	AppSettings::AutoTimerSaveLocal = settings.value("AutoTimerSaveLocal", true).toBool();
 	AppSettings::AutoCheckUpdate = settings.value("AutoCheckUpdate", true).toBool();
+	AppSettings::ScanHangup = settings.value("ScanHangup", true).toBool();
 
-	AppSettings::AutoSaveLocalInter = settings.value("AutoSaveLocalInter", 20).toInt();
-	AppSettings::ScanFocusInter = settings.value("ScanFocusInter", 1).toInt();
+	AppSettings::SaveLocalInter = settings.value("SaveLocalInter", 20000).toInt();
+	AppSettings::ScanFocusInter = settings.value("ScanFocusInter", 500).toInt();
+	AppSettings::HangupJudgeTime = settings.value("HangupJudgeTime", 10000).toInt();
+	settings.endGroup();
 
+	settings.beginGroup("Advanced");
 	AppSettings::ErrLevel = settings.value("ErrLevel", 1).toInt();
+	settings.endGroup();
 }
 
 void SaveSettings()
 {
 	QSettings settings{ BasicConfig::SettingsSavePath, QSettings::IniFormat };
+	settings.beginGroup("Gereral");
 	settings.setValue("Startup", AppSettings::Startup);
-	settings.setValue("RunInBg", AppSettings::RunInBg);
+	settings.setValue("RunInTray", AppSettings::RunInTray);
 	settings.setValue("AutoCloseSave", AppSettings::AutoCloseSave);
-	settings.setValue("TimerSaveLocal", AppSettings::TimerSaveLocal);
+	settings.setValue("AutoTimerSaveLocal", AppSettings::AutoTimerSaveLocal);
 	settings.setValue("AutoCheckUpdate", AppSettings::AutoCheckUpdate);
+	settings.setValue("ScanHangup", AppSettings::ScanHangup);
 
-	settings.setValue("AutoSaveLocalInter", AppSettings::AutoSaveLocalInter);
+	settings.setValue("SaveLocalInter", AppSettings::SaveLocalInter);
 	settings.setValue("ScanFocusInter", AppSettings::ScanFocusInter);
+	settings.setValue("HangupJudgeTime", AppSettings::HangupJudgeTime);
+	settings.endGroup();
 
+	settings.beginGroup("Advanced");
 	settings.setValue("ErrLevel", AppSettings::ErrLevel);
+	settings.endGroup();
 }
 
 void InitBasicConfig()
@@ -80,6 +92,10 @@ void InitBasicConfig()
 	CreateDirIfNoExist(BasicConfig::AppDataDir);
 	BasicConfig::SettingsSavePath = JoinPaths({ BasicConfig::AppDataDir, GetSettingsFileName() });
 	BasicConfig::TimerDbSavePath = JoinPaths({ BasicConfig::AppDataDir, GetTimerDbFileName() });
+
+	QSettings settings{ BasicConfig::SettingsSavePath, QSettings::IniFormat };
+	BasicConfig::IsFirstRunApp = settings.value("IsFirstRunApp", true).toBool();
+	settings.setValue("IsFirstRunApp", false);
 }
 
 QString GetSettingsFileName()
@@ -175,7 +191,19 @@ QString FormatErrCode(QString tip, DWORD err_code)
 void ShowErrorMsg(QString err, int lv, QWidget* parent)
 {
 	if (lv <= AppSettings::ErrLevel) {
-		QMessageBox::critical(parent, "严重错误", err);
+		QString title;
+		switch (lv)
+		{
+		case 1:
+			title = "严重错误";
+			break;
+		case 2:
+			title = "错误";
+			break;
+		default:
+			break;
+		}
+		QMessageBox::critical(parent, title, err);
 	}
 }
 
@@ -203,27 +231,13 @@ QByteArray StlToQBytes(const std::string& stl)
 	return QByteArray::fromStdString(stl);
 }
 
-TimerItemStoreData TimerItemBasicInfoToStoreData(const TimerItemBasicInfo& info)
+void AutoRegistryStartup()
 {
-	TimerItemStoreData store{};
-	store.proc_name = info.proc_name;
-	store.tags = info.tags;
-	store.can_del = info.can_del;
-	store.can_edit = info.can_edit;
-	store.can_pause = info.can_pause;
-	store.today.julian_date = info.julian_data;
-	return store;
-}
-
-TimerItemBasicInfo TimerItemStoreDataToBasicInfo(const QString& timer_name, const TimerItemStoreData& data)
-{
-	TimerItemBasicInfo info{};
-	info.proc_name = data.proc_name;
-	info.can_del = data.can_del;
-	info.can_edit = data.can_edit;
-	info.can_pause = data.can_pause;
-	info.tags = data.tags;
-	info.timer_name = timer_name;
-	info.julian_data = data.today.julian_date;
-	return info;
+	QSettings registry("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+	if (AppSettings::Startup) {
+		registry.setValue("QSeniorTimer", QCoreApplication::applicationFilePath().replace('/', '\\'));
+	}
+	else {
+		registry.remove("QSeniorTimer");
+	}
 }

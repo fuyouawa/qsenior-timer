@@ -11,7 +11,7 @@ class TimerTableHeaderView : public QHeaderView
 	Q_OBJECT
 
 public:
-	TimerTableHeaderView(Qt::Orientation orientation, QWidget* parent = nullptr);
+	TimerTableHeaderView(QWidget* parent = nullptr);
 	~TimerTableHeaderView();
 
 	void paintSection(QPainter* painter, const QRect& rect, int logicalIndex) const override;

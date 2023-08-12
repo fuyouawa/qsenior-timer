@@ -7,10 +7,6 @@ TimerInfoDlg::TimerInfoDlg(QWidget* parent, const TimerItemStoreData& data, cons
 	ui.edit_timer_name->setText(timer_name);
 	ui.edit_proc_name->setText(data.proc_name);
 	ui.edit_tags->setText(data.tags);
-	ui.lab_flags->setText(QString("<html><head/><body><p align=\"center\">是否可被删除<span style=\" font - weight:700; \">: %1</span></p><p align=\"center\">是否可被暂停<span style=\" font - weight:700; \">: %2</span></p><p align=\"center\">是否可被编辑<span style=\" font - weight:700; \">: %3</span></p></body></html>")
-		.arg(data.can_del ? "是" : "否")
-		.arg(data.can_pause ? "是" : "否")
-		.arg(data.can_edit ? "是" : "否"));
 	ui.table_history->setColumnWidth(0, 100);
 }
 
@@ -47,16 +43,15 @@ void TimerInfoDlg::AppendDayTimer(const TimerItemStoreData::DayTimer& timer)
 
 void TimerInfoDlg::on_btn_load_history_clicked()
 {
-	TimerDbInstanceScope(
-		auto opt = TimerDb::Instance->GetTimerHistory(ui.edit_timer_name->text());
-	)
-	if (opt.IsSome()) {
+	if (auto opt = TimerDb::Instance->GetTimerHistory(ui.edit_timer_name->text()); opt.IsSome()) {
+		ui.table_history->clear();
+		ui.table_history->setRowCount(0);
 		auto history = opt.SomeVal();
 		for (auto& item : history) {
 			AppendDayTimer(item);
 		}
 	}
 	else {
-		ShowErrorMsg("读取历史记录失败!", 1, this);
+		ShowErrorMsg(TimerDb::Instance->LastError(), 1, this);
 	}
 }

@@ -32,12 +32,12 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>msvc</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;network;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>msvc</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;network;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -58,6 +58,7 @@
     <TargetName>QSeniorTimer</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <TargetName>QSeniorTimer</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -70,6 +71,19 @@
     <Link>
       <AdditionalLibraryDirectories>E:\Code\C++\Framework\qt-easy-lib\x64\Debug;$(SolutionDir)third-party\leveldb\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>QtEasyLib.lib;leveldb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <UACExecutionLevel>HighestAvailable</UACExecutionLevel>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)qsenior-timer\;E:\Code\C++\Framework\qt-easy-lib\include;$(SolutionDir)third-party\;%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>E:\Code\C++\Framework\qt-easy-lib\x64\Release;$(SolutionDir)third-party\leveldb\release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>QtEasyLib.lib;leveldb.lib;%(AdditionalDependencies);$(Qt_LIBS_)</AdditionalDependencies>
+      <UACExecutionLevel>HighestAvailable</UACExecutionLevel>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -91,7 +105,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>MaxSpeed</Optimization>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -100,6 +114,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtUic Include="frame\create_timer_item_dlg.ui" />
+    <QtUic Include="frame\edit_timer_dlg.ui" />
     <QtUic Include="frame\mainwin.ui" />
     <QtUic Include="frame\timer_info_dlg.ui" />
     <QtUic Include="settingsdlg.ui" />
@@ -115,11 +130,13 @@
   <ItemGroup>
     <ClCompile Include="delegate\timer_item_delegrate.cpp" />
     <ClCompile Include="frame\create_timer_item_dlg.cpp" />
+    <ClCompile Include="frame\edit_timer_dlg.cpp" />
     <ClCompile Include="frame\mainwin.cpp" />
     <ClCompile Include="frame\settingsdlg.cpp" />
     <ClCompile Include="frame\timer_info_dlg.cpp" />
     <ClCompile Include="global\config.cpp" />
     <ClCompile Include="global\focus_detector.cpp" />
+    <ClCompile Include="global\hangup_detector.cpp" />
     <ClCompile Include="global\timer_controller.cpp" />
     <ClCompile Include="global\utils.cpp" />
     <ClCompile Include="main.cpp" />
@@ -133,7 +150,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="frame\timer_info_dlg.h" />
+    <QtMoc Include="frame\edit_timer_dlg.h" />
     <ClInclude Include="global\event_types.h" />
+    <QtMoc Include="global\hangup_detector.h" />
     <ClInclude Include="resources\resource.h" />
     <QtMoc Include="tools\timerdb.h" />
     <QtMoc Include="global\timer_controller.h" />

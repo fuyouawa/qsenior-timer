@@ -44,9 +44,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="chk_run_in_bg">
+           <widget class="QCheckBox" name="chk_run_in_tray">
             <property name="text">
-             <string>关闭软件时后台运行</string>
+             <string>关闭软件时隐藏到系统托盘</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -64,7 +64,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="chk_timer_save_local">
+           <widget class="QCheckBox" name="chk_auto_save_local">
             <property name="text">
              <string>定时自动保存(本地)</string>
             </property>
@@ -127,16 +127,16 @@
             <item>
              <widget class="QSpinBox" name="edit_auto_save_local_inter">
               <property name="suffix">
-               <string>秒</string>
+               <string>ms</string>
               </property>
               <property name="minimum">
-               <number>10</number>
+               <number>1000</number>
               </property>
               <property name="maximum">
-               <number>9999</number>
+               <number>1145141919</number>
               </property>
               <property name="value">
-               <number>20</number>
+               <number>20000</number>
               </property>
              </widget>
             </item>
@@ -154,16 +154,16 @@
             <item>
              <widget class="QSpinBox" name="edit_scan_forces_inter">
               <property name="suffix">
-               <string>秒</string>
+               <string>ms</string>
               </property>
               <property name="minimum">
-               <number>1</number>
+               <number>100</number>
               </property>
               <property name="maximum">
-               <number>9999</number>
+               <number>1145141919</number>
               </property>
               <property name="value">
-               <number>1</number>
+               <number>500</number>
               </property>
              </widget>
             </item>
@@ -181,16 +181,16 @@
             <item>
              <widget class="QSpinBox" name="edit_hang_up_judge">
               <property name="suffix">
-               <string>秒</string>
+               <string>ms</string>
               </property>
               <property name="minimum">
-               <number>1</number>
+               <number>100</number>
               </property>
               <property name="maximum">
-               <number>9999</number>
+               <number>1145141919</number>
               </property>
               <property name="value">
-               <number>10</number>
+               <number>10000</number>
               </property>
              </widget>
             </item>

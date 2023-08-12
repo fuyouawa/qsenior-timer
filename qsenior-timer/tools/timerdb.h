@@ -17,15 +17,13 @@ public:
 
 	~TimerDb();
 
-	bool Open();
-	void Close();
-
 	bool SaveData(const QString& timer_name, const TimerItemStoreData& data);
-	void ForeachData(std::function<void(const QString&, const TimerItemStoreData&)> callback);
+	bool ForeachData(std::function<void(const QString&, const TimerItemStoreData&)> callback);
 	fustd::Option<QList<TimerItemStoreData::DayTimer>> GetTimerHistory(const QString& timer_name);
-	void ChangeTimerName(const QString& origi_timer_name, const QString& timer_name);
+	bool ChangeTimerName(const QString& dest_timer_name, const QString& change);
+	bool ChangeTimerTags(const QString& dest_timer_name, const QString& change);
 
-	void SetMsgParent(QWidget* msg_parent);
+	QString LastError();
 
 private:
 	TimerDb();
@@ -36,23 +34,20 @@ private:
 	QJsonObject TimerItemStoreDataDayTimerToJson(const TimerItemStoreData::DayTimer& timer);
 	TimerItemStoreData::DayTimer JsonToTimerItemStoreDataDayTimer(const QJsonObject& obj);
 
-	void ShowDbBrokenError();
+	void DbBrokenError();
 
 	fustd::Option<TimerItemStoreData> JsonToTimerItemStoreDataSafed(const QJsonObject& obj);
 
-	fustd::Option<QList<TimerItemStoreData::DayTimer>> JsonToTimerItemStoreDataDayTimerListSafed(const QJsonArray& arr);
+	fustd::Option<QList<TimerItemStoreData::DayTimer>> JsonToHistroySafed(const QJsonArray& arr);
+
+	fustd::Result<QJsonObject, leveldb::Status> ReadTimerJsonSafed(const QString& timer_name);
+	leveldb::Status SaveTimerJsonSafed(const QString& timer_name, const QJsonObject& obj);
+	leveldb::Status DelectTimerSafed(const QString& timer_name);
+
+	fustd::Option<QJsonArray> GetHistroyJsonInJsonSafed(const QJsonObject& obj);
+
+	void SetLastErr(const QString& err);
 
 	leveldb::DB* db_;
-	QWidget* msg_parent_;
+	QString last_err_;
 };
-
-#define TimerDbInstanceScope(code) \
-    TimerDb::Instance->SetMsgParent(this); \
-	code \
-	TimerDb::Instance->SetMsgParent(nullptr);
-
-#define TimerDbInstanceScope2(code) \
-    TimerDb::Instance->SetMsgParent(msg_parent_); \
-	code \
-	TimerDb::Instance->SetMsgParent(nullptr);
-	

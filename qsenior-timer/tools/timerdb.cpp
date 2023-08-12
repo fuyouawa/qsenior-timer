@@ -4,29 +4,17 @@ TimerDb* const TimerDb::Instance = new TimerDb();
 
 TimerDb::TimerDb()
 	: QObject(nullptr),
-	db_(nullptr),
-	msg_parent_(nullptr)
+	db_(nullptr)
 {
-}
-
-TimerDb::~TimerDb()
-{
-	Close();
-}
-
-bool TimerDb::Open()
-{
-	leveldb::Options opts;
+	leveldb::Options opts{};
 	opts.create_if_missing = true;
 	auto status = leveldb::DB::Open(opts, QStrToStl(BasicConfig::TimerDbSavePath), &db_);
 	if (!status.ok()) {
-		ShowErrorMsg("数据库打开失败, 错误原因: " + StlToQStr(status.ToString()), 1, msg_parent_);
-		return false;
+		ShowErrorMsg("数据库打开失败, 错误原因: " + StlToQStr(status.ToString()), 1);
 	}
-	return true;
 }
 
-void TimerDb::Close()
+TimerDb::~TimerDb()
 {
 	if (db_)
 		delete db_;
@@ -36,32 +24,23 @@ void TimerDb::Close()
 bool TimerDb::SaveData(const QString& timer_name, const TimerItemStoreData& data)
 {
 	QJsonObject json_obj_tmp;
-	std::string stlstr_tmp;
 	QJsonArray histroy;
 
-	auto timer_stl_name = QStrToStl(timer_name);
-	auto status = db_->Get(leveldb::ReadOptions(), timer_stl_name, &stlstr_tmp);
 	auto today_timer_obj = TimerItemStoreDataDayTimerToJson(data.today);
 
-	if (status.ok()) {
-		auto doc = QJsonDocument::fromJson(StlToQBytes(stlstr_tmp));
-		json_obj_tmp = doc.object();
-		histroy = json_obj_tmp["his"].toArray();
-		if (histroy.isEmpty()) {
-			goto _broken_item;
-		}
-		else {
+	if (auto res = ReadTimerJsonSafed(timer_name); res.IsOk()) {
+		if (auto opt = GetHistroyJsonInJsonSafed(res.OkVal()); opt.IsSome()) {
+			histroy = opt.SomeVal();
 			json_obj_tmp = histroy.begin()->toObject();
 			if (json_obj_tmp.isEmpty())
 				goto _broken_item;
 			auto first_histroy_day_timer = JsonToTimerItemStoreDataDayTimer(json_obj_tmp);
-			if (first_histroy_day_timer.julian_date == data.today.julian_date) {
+			if (first_histroy_day_timer.julian_date == data.today.julian_date)
 				histroy.replace(0, today_timer_obj);
-			}
-			else {
+			else
 				histroy.insert(histroy.begin(), today_timer_obj);
-			}
 		}
+		else goto _broken_item;
 	}
 	else {
 	_broken_item:
@@ -70,15 +49,15 @@ bool TimerDb::SaveData(const QString& timer_name, const TimerItemStoreData& data
 	}
 	json_obj_tmp = TimerItemStoreDataToJsonWithoutToday(data);
 	json_obj_tmp["his"] = histroy;
-	status = db_->Put(leveldb::WriteOptions(), timer_stl_name, QStrToStl(QJsonDocument(json_obj_tmp).toJson(QJsonDocument::Compact)));
+	auto status = SaveTimerJsonSafed(timer_name, json_obj_tmp);
 	if (!status.ok()) {
-		ShowErrorMsg("保存数据失败! 原因: " + StlToQStr(status.ToString()), 1, msg_parent_);
+		SetLastErr("保存数据失败! 原因: " + StlToQStr(status.ToString()));
 		return false;
 	}
 	return true;
 }
 
-void TimerDb::ForeachData(std::function<void(const QString&, const TimerItemStoreData&)> callback)
+bool TimerDb::ForeachData(std::function<void(const QString&, const TimerItemStoreData&)> callback)
 {
 	QJsonDocument json_doc_tmp;
 
@@ -93,11 +72,11 @@ void TimerDb::ForeachData(std::function<void(const QString&, const TimerItemStor
 	}
 _suc:
 	delete iter;
-	return;
+	return true;
 _err:
-	ShowDbBrokenError();
-	QMessageBox::warning(msg_parent_, "提示", "由于出现异常, 已停止加载计时器!");
+	DbBrokenError();
 	delete iter;
+	return false;
 }
 
 fustd::Option<QList<TimerItemStoreData::DayTimer>> TimerDb::GetTimerHistory(const QString& timer_name)
@@ -107,22 +86,55 @@ fustd::Option<QList<TimerItemStoreData::DayTimer>> TimerDb::GetTimerHistory(cons
 	if (status.ok()) {
 		auto doc = QJsonDocument::fromJson(StlToQBytes(stlstr_tmp));
 		if (doc.isEmpty() || !doc.isObject()) {
-			ShowDbBrokenError();
+			DbBrokenError();
 			return fustd::None();
 		}
-		return JsonToTimerItemStoreDataDayTimerListSafed(doc["his"].toArray());
+		if (auto opt = GetHistroyJsonInJsonSafed(doc.object()); opt.IsSome()) {
+			return JsonToHistroySafed(opt.SomeVal());
+		}
 	}
-	ShowErrorMsg("计时器: " + timer_name + "的历史记录读取失败!\n原因: " + StlToQStr(status.ToString()), 2, msg_parent_);
+	SetLastErr("计时器: " + timer_name + "的历史记录从数据库中读取失败!\n原因: " + StlToQStr(status.ToString()));
 	return fustd::None();
 }
 
-void TimerDb::ChangeTimerName(const QString& origi_timer_name, const QString& timer_name)
+bool TimerDb::ChangeTimerName(const QString& dest_timer_name, const QString& change)
 {
+	leveldb::Status status;
+	if (auto res = ReadTimerJsonSafed(dest_timer_name); res.IsOk()) {
+		status = DelectTimerSafed(dest_timer_name);
+		if (status.ok()) {
+			status = SaveTimerJsonSafed(change, res.OkVal());
+			if (status.ok())
+				return true;
+		}
+	}
+	else {
+		status = res.ErrVal();
+	}
+	SetLastErr("计时器: " + dest_timer_name + "的名称在数据库中修改失败!\n原因: " + StlToQStr(status.ToString()));
+	return false;
 }
 
-void TimerDb::SetMsgParent(QWidget* msg_parent)
+bool TimerDb::ChangeTimerTags(const QString& dest_timer_name, const QString& change)
 {
-	msg_parent_ = msg_parent;
+	leveldb::Status status;
+	if (auto res = ReadTimerJsonSafed(dest_timer_name); res.IsOk()) {
+		auto obj = res.OkVal();
+		obj["ts"] = change;
+		status = SaveTimerJsonSafed(change, obj);
+		if (status.ok())
+			return true;
+	}
+	else {
+		status = res.ErrVal();
+	}
+	SetLastErr("计时器: " + dest_timer_name + "的名称在数据库中修改失败!\n原因: " + StlToQStr(status.ToString()));
+	return false;
+}
+
+QString TimerDb::LastError()
+{
+	return last_err_;
 }
 
 QJsonObject TimerDb::TimerItemStoreDataToJsonWithoutToday(const TimerItemStoreData& data)
@@ -131,23 +143,9 @@ QJsonObject TimerDb::TimerItemStoreDataToJsonWithoutToday(const TimerItemStoreDa
 
 	obj["pn"] = data.proc_name;
 	obj["ts"] = data.tags;
-	obj["ss"] = data.status == kStatusRunning ? kStatusStanding : data.status;
+	obj["ss"] = data.status == kStatusPaused ? kStatusPaused : kStatusStanding;
 	obj["tt"] = data.total_time;
-
-	int flags = 0;
-	if (data.can_del) {
-		flags |= kFlagCanDel;
-	}
-	if (data.can_pause) {
-		flags |= kFlagCanPause;
-	}
-	if (data.can_edit) {
-		flags |= kFlagCanEdit;
-	}
-	if (data.is_hidden) {
-		flags |= kFlagIsHidden;
-	}
-	obj["fs"] = flags;
+	obj["hn"] = data.is_hidden ? 1 : 0;
 
 	return obj;
 }
@@ -158,14 +156,10 @@ TimerItemStoreData TimerDb::JsonToTimerItemStoreDataWithoutToday(const QJsonObje
 
 	data.proc_name = obj["pn"].toString();
 	data.tags = obj["ts"].toString();
-	data.status = static_cast<char>(obj["ss"].toInt());
+	data.status = obj["ss"].toInt();
 	data.total_time = obj["tt"].toInt();
 
-	int flags = obj["fs"].toInt();
-	data.can_del = flags & kFlagCanDel;
-	data.can_pause = flags & kFlagCanPause;
-	data.can_edit = flags & kFlagCanEdit;
-	data.is_hidden = flags & kFlagIsHidden;
+	data.is_hidden = obj["hn"].toInt() == 0 ? false : true;
 
 	return data;
 }
@@ -190,9 +184,9 @@ TimerItemStoreData::DayTimer TimerDb::JsonToTimerItemStoreDataDayTimer(const QJs
 	return timer;
 }
 
-void TimerDb::ShowDbBrokenError()
+void TimerDb::DbBrokenError()
 {
-	ShowErrorMsg("从数据库中读取计时器失败!\n原因: 数据库文件损坏!\n路径: " + BasicConfig::TimerDbSavePath, 1, msg_parent_);
+	last_err_ = "从数据库中读取计时器失败!\n原因: 数据库文件损坏!\n路径: " + BasicConfig::TimerDbSavePath;
 }
 
 fustd::Option<TimerItemStoreData> TimerDb::JsonToTimerItemStoreDataSafed(const QJsonObject& obj)
@@ -213,7 +207,7 @@ fustd::Option<TimerItemStoreData> TimerDb::JsonToTimerItemStoreDataSafed(const Q
 	return fustd::Some(std::move(data));
 }
 
-fustd::Option<QList<TimerItemStoreData::DayTimer>> TimerDb::JsonToTimerItemStoreDataDayTimerListSafed(const QJsonArray& arr)
+fustd::Option<QList<TimerItemStoreData::DayTimer>> TimerDb::JsonToHistroySafed(const QJsonArray& arr)
 {
 	if (arr.isEmpty())
 		return fustd::None();
@@ -224,4 +218,43 @@ fustd::Option<QList<TimerItemStoreData::DayTimer>> TimerDb::JsonToTimerItemStore
 		total.append(JsonToTimerItemStoreDataDayTimer(item.toObject()));
 	}
 	return fustd::Some(std::move(total));
+}
+
+fustd::Result<QJsonObject, leveldb::Status> TimerDb::ReadTimerJsonSafed(const QString& timer_name)
+{
+	std::string stlstr_tmp;
+	auto status = db_->Get(leveldb::ReadOptions(), QStrToStl(timer_name), &stlstr_tmp);
+	if (status.ok()) {
+		auto doc = QJsonDocument::fromJson(StlToQBytes(stlstr_tmp));
+		if (doc.isEmpty() || !doc.isObject()) {
+			return fustd::Err(std::move(status));
+		}
+		return fustd::Ok(doc.object());
+	}
+	return fustd::Err(std::move(status));
+}
+
+leveldb::Status TimerDb::SaveTimerJsonSafed(const QString& timer_name, const QJsonObject& obj)
+{
+	return db_->Put(leveldb::WriteOptions(), QStrToStl(timer_name), QStrToStl(QJsonDocument(obj).toJson(QJsonDocument::Compact)));
+}
+
+leveldb::Status TimerDb::DelectTimerSafed(const QString& timer_name)
+{
+	return db_->Delete(leveldb::WriteOptions(), QStrToStl(timer_name));
+}
+
+fustd::Option<QJsonArray> TimerDb::GetHistroyJsonInJsonSafed(const QJsonObject& obj)
+{
+	if (obj.isEmpty())
+		return fustd::None();
+	auto arr = obj["his"].toArray();
+	if (arr.isEmpty())
+		return fustd::None();
+	return fustd::Some(std::move(arr));
+}
+
+void TimerDb::SetLastErr(const QString& err)
+{
+	last_err_ = err;
 }

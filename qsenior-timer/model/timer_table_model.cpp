@@ -15,12 +15,7 @@ TimerTableModel::~TimerTableModel()
     }
 }
 
-void TimerTableModel::InsertTimer(const TimerItemBasicInfo& info)
-{
-    InsertTimer(info.timer_name, TimerItemBasicInfoToStoreData(info), info.start_imm);
-}
-
-void TimerTableModel::InsertTimer(const QString& timer_name, const TimerItemStoreData& data, bool start_imm)
+void TimerTableModel::InsertTimer(const QString& timer_name, const TimerItemStoreData& data)
 {
     for (size_t i = 0; i < rowCount(); i++) {
         if (GetTimerName(i) == timer_name) {
@@ -30,13 +25,12 @@ void TimerTableModel::InsertTimer(const QString& timer_name, const TimerItemStor
     }
     auto item1 = new QStandardItem(timer_name);
     auto store = new TimerItemStoreData(data);
-    store->status = start_imm ? kStatusStanding : kStatusPaused;
     item1->setData((qulonglong)store, Qt::UserRole);
     item1->setTextAlignment(Qt::AlignCenter);
     item1->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
 
     auto item2 = new QStandardItem(AutoFormatSecondInData(data));
-    item2->setData(kTagIsPreviousRunning, Qt::UserRole);
+    item2->setData(kFlagIsPreviousRunning, Qt::UserRole);
     item2->setTextAlignment(Qt::AlignCenter);
     item2->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
 
@@ -61,26 +55,25 @@ TimerItemStoreData* TimerTableModel::GetTimerItemStoreData(int row)
     return (TimerItemStoreData*)item(row, kDataStore)->data(Qt::UserRole).toULongLong();
 }
 
-void TimerTableModel::SetTimerItemTags(int row, TimerItemTags tags)
+void TimerTableModel::SetTimerItemFlags(int row, TimerItemFlags tags)
 {
     item(row, kDataTags)->setData((int)tags, Qt::UserRole);
 }
 
-TimerItemTags TimerTableModel::GetTimerItemTags(int row)
+TimerItemFlags TimerTableModel::GetTimerItemFlags(int row)
 {
-    return (TimerItemTags)item(row, kDataTags)->data(Qt::UserRole).toInt();
+    return (TimerItemFlags)item(row, kDataTags)->data(Qt::UserRole).toInt();
 }
 
 void TimerTableModel::SaveTimers()
 {
     QMap<QString, TimerItemStoreData> total;
-    TimerDbInstanceScope2(
-        for (size_t i = 0; i < rowCount(); i++) {
-            if (!TimerDb::Instance->SaveData(GetTimerName(i), *GetTimerItemStoreData(i))) {
-                return;
-            }
+    for (size_t i = 0; i < rowCount(); i++) {
+        if (!TimerDb::Instance->SaveData(GetTimerName(i), *GetTimerItemStoreData(i))) {
+            ShowErrorMsg(TimerDb::Instance->LastError(), 1, msg_parent_);
+            break;
         }
-    )
+    }
 }
 
 QString TimerTableModel::AutoFormatSecondInData(const TimerItemStoreData& data)
@@ -101,20 +94,39 @@ QString TimerTableModel::GetTimerName(int row)
     return item(row, kColumnTimerName)->text();
 }
 
+QString TimerTableModel::GetTags(int row)
+{
+    return item(row, kColumnTags)->text();
+}
+
 void TimerTableModel::OnEvent(const SecondUpdateEvent& event)
 {
+    cur_run_items_row_.clear();
     for (size_t i = 0; i < rowCount(); i++) {
         auto data = GetTimerItemStoreData(i);
+
+        if (data->status != kStatusPaused && data->status != kStatusHangup) {
+            if (data->proc_name == cur_proc_name_) {
+                data->status = kStatusRunning;
+            }
+            else if (data->proc_name == prev_proc_name_) {
+                data->status = kStatusStanding;
+                SetTimerItemFlags(i, kFlagIsPreviousRunning);
+            }
+        }
+        item(i, kColumnStatus)->setText(kTextTimerItemStatus[data->status]);
+
         if (data->status == kStatusRunning) {
-            if (GetTimerItemTags(i) == kTagIsPreviousRunning) {
+            if (GetTimerItemFlags(i) == kFlagIsPreviousRunning) {
                 data->today.last_continuous = 0;
-                SetTimerItemTags(i, kTagNone);
+                SetTimerItemFlags(i, kFlagNone);
             }
             ++data->total_time;
             ++data->today.day_time;
             ++data->today.last_continuous;
             if (data->today.last_continuous > data->today.max_continuous)
                 data->today.max_continuous = data->today.last_continuous;
+            cur_run_items_row_.append(i);
             UpdateTimerCount(i);
         }
     }
@@ -122,24 +134,29 @@ void TimerTableModel::OnEvent(const SecondUpdateEvent& event)
 
 void TimerTableModel::OnEvent(const FocusWindowChangedEvent& event)
 {
-    for (size_t i = 0; i < rowCount(); i++) {
-        auto data = GetTimerItemStoreData(i);
-        if (data->status != kStatusPaused) {
-            if (data->proc_name == event.cur_proc) {
-                data->status = kStatusRunning;
-            }
-            else if (data->proc_name == event.prev_proc) {
-                data->status = kStatusStanding;
-                SetTimerItemTags(i, kTagIsPreviousRunning);
-            }
-            item(i, kColumnStatus)->setText(kTextTimerItemStatus[data->status]);
-        }
-    }
+    cur_proc_name_ = event.cur_proc;
+    prev_proc_name_ = event.prev_proc;
 }
 
 void TimerTableModel::OnEvent(const NeedSaveLocalEvent& event)
 {
     SaveTimers();
+}
+
+void TimerTableModel::OnEvent(const CursorHangedupEvent& event)
+{
+    for (auto row : cur_run_items_row_) {
+        GetTimerItemStoreData(row)->status = kStatusHangup;
+    }
+    cur_hangingup_items_row_ = std::move(cur_run_items_row_);
+}
+
+void TimerTableModel::OnEvent(const CursorUnHangedupEvent& event)
+{
+    for (auto row : cur_hangingup_items_row_) {
+        GetTimerItemStoreData(row)->status = kStatusStanding;
+    }
+    cur_hangingup_items_row_.clear();
 }
 
 void TimerTableModel::UpdateTimerCount(int row)
@@ -149,9 +166,10 @@ void TimerTableModel::UpdateTimerCount(int row)
 
 void TimerTableModel::InitTimers()
 {
-    TimerDbInstanceScope2(
-        TimerDb::Instance->ForeachData([this](const QString& timer_name, const TimerItemStoreData& data) {
-            InsertTimer(timer_name, data, true);
-            });
-    )
+    auto res = TimerDb::Instance->ForeachData([this](const QString& timer_name, const TimerItemStoreData& data) {
+        InsertTimer(timer_name, data);
+        });
+
+    if (!res)
+        ShowErrorMsg(TimerDb::Instance->LastError(), 1, msg_parent_);
 }

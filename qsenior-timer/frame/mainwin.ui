@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Senior Timer-1.0</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../resources/res.qrc">
+    <normaloff>:/pictures/qsenior-timer.ico</normaloff>:/pictures/qsenior-timer.ico</iconset>
+  </property>
   <widget class="QWidget" name="central_widget">
    <layout class="QVBoxLayout" name="central_vertical_layout"/>
   </widget>
@@ -46,10 +50,6 @@
      <string>编辑</string>
     </property>
     <addaction name="act_add_timer"/>
-    <addaction name="act_del_timer"/>
-    <addaction name="act_start_timer"/>
-    <addaction name="act_pause_timer"/>
-    <addaction name="separator"/>
     <addaction name="act_settings"/>
    </widget>
    <widget class="QMenu" name="menu_4">
@@ -90,17 +90,6 @@
   <action name="act_manual">
    <property name="text">
     <string>使用方法</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::NoRole</enum>
-   </property>
-  </action>
-  <action name="act_del_timer">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>删除所选计时器</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
@@ -177,25 +166,6 @@
    </property>
    <property name="text">
     <string>查看隐藏项</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::NoRole</enum>
-   </property>
-  </action>
-  <action name="act_start_timer">
-   <property name="text">
-    <string>启动所选计时器</string>
-   </property>
-   <property name="toolTip">
-    <string>启动所选计时器</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::NoRole</enum>
-   </property>
-  </action>
-  <action name="act_pause_timer">
-   <property name="text">
-    <string>暂停所选计时器</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>

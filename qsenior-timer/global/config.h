@@ -5,6 +5,8 @@
 #include <QDir>
 #include <array>
 
+inline const QString kAppVersion = "v1.0.0-beta";
+
 enum TimerTableColumn
 {
 	kColumnTimerName,
@@ -28,13 +30,6 @@ enum TimerItemStatus
 	kStatusHangup
 };
 
-enum TimerItemOperIndex
-{
-	kOperIndexTimer,
-	kOperIndexShowMessage,
-	kOperIndexHidden
-};
-
 enum TimerTableHeaderOperatorIndex
 {
 	kOperIndexCutNameMode,
@@ -46,16 +41,8 @@ enum TimerTableHeaderOperatorIndex
 
 enum TimerItemFlags
 {
-	kFlagCanDel = 0b0001,
-	kFlagCanPause = 0b0010,
-	kFlagCanEdit = 0b0100,
-	kFlagIsHidden = 0b1000
-};
-
-enum TimerItemTags
-{
-	kTagNone,
-	kTagIsPreviousRunning
+	kFlagNone,
+	kFlagIsPreviousRunning
 };
 
 enum TimerTableHeaderTimeCounterViewModel
@@ -70,9 +57,6 @@ struct TimerItemBasicInfo
 	QString timer_name;
 	QString proc_name;
 	QString tags;
-	bool can_del;
-	bool can_pause;
-	bool can_edit;
 	bool start_imm;
 	qint64 julian_data;
 };
@@ -87,30 +71,28 @@ struct TimerItemStoreData
 	};
 	QString proc_name;				// pn
 	QString tags;					// ts
-	bool can_del;					// fs
-	bool can_pause;
-	bool can_edit;
 	bool is_hidden;
 	int status;						// ss
 	int total_time;					// tt
 	DayTimer today;					// ty
 };
 
-inline const QStringList kTextTimerItemOperations = { "定时", "详细", "隐藏" };
-inline const QStringList kTextTimerTableHorizontalHeader = { "计时器名称", "总使用时间", "标签", "状态", "操作" };
+inline const QStringList kTextTimerTableHorizontalHeader = { "计时器名称", "总使用时间", "标签", "状态", "" };
 inline const QStringList kTextTimerItemStatus = { "暂停中", "计时中", "待命中", "挂机中"};
 
 class AppSettings
 {
 public:
 	inline static bool Startup;
-	inline static bool RunInBg;
+	inline static bool RunInTray;
 	inline static bool AutoCloseSave;
-	inline static bool TimerSaveLocal;
+	inline static bool AutoTimerSaveLocal;
 	inline static bool AutoCheckUpdate;
+	inline static bool ScanHangup;
 
-	inline static int AutoSaveLocalInter;
+	inline static int SaveLocalInter;
 	inline static int ScanFocusInter;
+	inline static int HangupJudgeTime;
 
 	inline static int ErrLevel;
 };
@@ -120,6 +102,8 @@ public:
 	inline static QString SettingsSavePath;
 	inline static QString TimerDbSavePath;
 	inline static QString AppDataDir;
+
+	inline static bool IsFirstRunApp;
 };
 
 

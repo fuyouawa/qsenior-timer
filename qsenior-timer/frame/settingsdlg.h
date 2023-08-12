@@ -2,7 +2,6 @@
 
 #include <QDialog>
 #include <QMessageBox>
-#include <QtEasyLib/QEasyEventSystem>
 
 #include "global/config.h"
 #include "global/event_types.h"

@@ -15,13 +15,10 @@ public:
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) override;
 
-private:
-    struct {
-        int row;
-        int column;
-        int btn_idx;
-    } oper_btn_pressed_info_;
-
 signals:
-    void operBtnClicked(int row, TimerItemOperIndex oper_idx);
+    void operBtnClicked(int row);
+
+private:
+    int oper_btn_pressed_row_;
+    QPixmap oper_btn_pixmap_;
 };

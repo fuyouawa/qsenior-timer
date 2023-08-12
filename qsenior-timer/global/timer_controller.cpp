@@ -4,20 +4,14 @@ TimerController* const TimerController::Instance = new TimerController();
 
 TimerController::TimerController(QObject *parent)
 	: QObject(parent),
-    focus_detector_timer_(this),
     second_timer_(this),
     auto_save_local_timer_(this)
 {
-    second_timer_.setInterval(1000);
-
-    connect(&focus_detector_timer_, &QTimer::timeout, [this]() {
-        QEasyEventBus::EmitAsync(NeedScanForceWindowEvent());
-        });
     connect(&second_timer_, &QTimer::timeout, [this]() {
-        QEasyEventBus::EmitAsync(SecondUpdateEvent());
+        QEasyEventBus::Emit(SecondUpdateEvent());
         });
     connect(&auto_save_local_timer_, &QTimer::timeout, [this]() {
-        QEasyEventBus::EmitAsync(NeedSaveLocalEvent());
+        QEasyEventBus::Emit(NeedSaveLocalEvent());
         });
 }
 
@@ -25,23 +19,32 @@ TimerController::~TimerController()
 {}
 
 
-void TimerController::StartNeeded()
+void TimerController::AutoStartOrClose()
 {
-    UpdateAll();
-    focus_detector_timer_.start();
-    if (AppSettings::AutoSaveLocalInter) {
-        auto_save_local_timer_.start();
-    }
-    second_timer_.start();
-}
+    FocusDetector::Instance->timer_.setInterval(AppSettings::ScanFocusInter);
+    auto_save_local_timer_.setInterval(AppSettings::SaveLocalInter);
+    HangupDetector::Instance->scan_hangup_timer_.setInterval(AppSettings::HangupJudgeTime);
+    second_timer_.setInterval(1000);
+    HangupDetector::Instance->scan_hangup_aux_timer_.setInterval(100);
 
-void TimerController::UpdateAll()
-{
-    focus_detector_timer_.setInterval(AppSettings::ScanFocusInter * 1000);
-    auto_save_local_timer_.setInterval(AppSettings::AutoSaveLocalInter * 1000);
+    FocusDetector::Instance->timer_.start();
+
+    if (AppSettings::AutoTimerSaveLocal)
+        auto_save_local_timer_.start();
+    else
+        auto_save_local_timer_.stop();
+
+    if (AppSettings::ScanHangup)
+        HangupDetector::Instance->scan_hangup_aux_timer_.start();
+    else {
+        HangupDetector::Instance->scan_hangup_aux_timer_.stop();
+        HangupDetector::Instance->scan_hangup_timer_.stop();
+    }
+
+    second_timer_.start();
 }
 
 void TimerController::OnEvent(const SettingsChangedEvent& event)
 {
-    StartNeeded();
+    AutoStartOrClose();
 }
