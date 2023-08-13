@@ -27,19 +27,28 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+#ifndef _DEBUG
 	if (!IsRunAsAdmin()) {
 		if (!AskForAdmin())
 			QMessageBox::warning(nullptr, "警告", "如果您不给予管理员权限, 某些功能可能无法正常使用!");
 		else
 			return 0;
 	}
+#endif // !_DEBUG
+
 
     InitBasicConfig();
     ReadSettings();
     if (BasicConfig::IsFirstRunApp) {
         AutoRegistryStartup();
     }
-    MainWin w;
-    w.show();
-    return a.exec();
+	TimerDb::Instance->Open();
+	int res = 0;
+	{
+		MainWin w;
+		w.show();
+		res = a.exec();
+	}
+	TimerDb::Instance->Close();
+	return res;
 }

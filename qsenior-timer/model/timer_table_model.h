@@ -25,7 +25,7 @@ public:
 	TimerItemStoreData* GetTimerItemStoreData(int row);
 	void SetTimerItemFlags(int row, TimerItemFlags tags);
 	TimerItemFlags GetTimerItemFlags(int row);
-	void SaveTimers();
+	bool SaveTimers();
 	QString AutoFormatSecondInData(const TimerItemStoreData& data);
 	QString GetTimerName(int row);
 	QString GetTags(int row);

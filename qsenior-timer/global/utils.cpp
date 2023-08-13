@@ -107,8 +107,8 @@ void InitBasicConfig()
 	BasicConfig::AppDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 	CreateDirIfNoExist(BasicConfig::AppDataDir);
 	BasicConfig::SettingsSavePath = JoinPaths({ BasicConfig::AppDataDir, GetSettingsFileName() });
-	BasicConfig::UserInfoSavePath = JoinPaths({ BasicConfig::AppDataDir, GetUserInfoFileName() });
 	BasicConfig::TimerDbSavePath = JoinPaths({ BasicConfig::AppDataDir, GetTimerDbFileName() });
+	BasicConfig::UserInfoSavePath = JoinPaths({ BasicConfig::AppDataDir, GetUserInfoFileName() });
 
 	QSettings settings{ BasicConfig::SettingsSavePath, QSettings::IniFormat };
 	BasicConfig::IsFirstRunApp = settings.value("IsFirstRunApp", true).toBool();
@@ -249,8 +249,7 @@ QString StlToQStr(const std::string& stl)
 
 QByteArray StlToQBytes(const std::string& stl)
 {
-	auto b = QByteArray::fromStdString(stl);
-	return QByteArray::fromStdString(stl);
+	return StlToQStr(stl).toUtf8();
 }
 
 void AutoRegistryStartup()

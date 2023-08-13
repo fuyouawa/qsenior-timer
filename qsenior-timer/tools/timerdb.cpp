@@ -6,19 +6,11 @@ TimerDb::TimerDb()
 	: QObject(nullptr),
 	db_(nullptr)
 {
-	leveldb::Options opts{};
-	opts.create_if_missing = true;
-	auto status = leveldb::DB::Open(opts, QStrToStl(BasicConfig::TimerDbSavePath), &db_);
-	if (!status.ok()) {
-		ShowErrorMsg("数据库打开失败, 错误原因: " + StlToQStr(status.ToString()), 1);
-	}
+
 }
 
 TimerDb::~TimerDb()
 {
-	if (db_)
-		delete db_;
-	db_ = nullptr;
 }
 
 bool TimerDb::SaveData(const QString& timer_name, const TimerItemStoreData& data)
@@ -60,23 +52,32 @@ bool TimerDb::SaveData(const QString& timer_name, const TimerItemStoreData& data
 bool TimerDb::ForeachData(std::function<void(const QString&, const TimerItemStoreData&)> callback)
 {
 	QJsonDocument json_doc_tmp;
+	QJsonParseError parse_err_tmp;
+	bool success = true;
 
 	auto iter = db_->NewIterator(leveldb::ReadOptions());
 	for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
-		json_doc_tmp = QJsonDocument::fromJson(StlToQBytes(iter->value().ToString()));
-		if (!json_doc_tmp.isObject())
-			goto _err;
+		json_doc_tmp = QJsonDocument::fromJson(StlToQBytes(iter->value().ToString()), &parse_err_tmp);
+		if (parse_err_tmp.error != QJsonParseError::NoError) {
+			SetLastErr("从数据库中读取计时器失败!\n原因: " + parse_err_tmp.errorString());
+			success = false;
+			break;
+		}
+		if (!json_doc_tmp.isObject()) {
+			DbBrokenError();
+			success = false;
+			break;
+		}
 		if (auto opt = JsonToTimerItemStoreDataSafed(json_doc_tmp.object()); opt.IsSome())
 			callback(StlToQStr(iter->key().ToString()), opt.SomeVal());
-		else goto _err;
+		else {
+			DbBrokenError();
+			success = false;
+			break;
+		}
 	}
-_suc:
 	delete iter;
-	return true;
-_err:
-	DbBrokenError();
-	delete iter;
-	return false;
+	return success;
 }
 
 fustd::Option<QList<TimerItemStoreData::DayTimer>> TimerDb::GetTimerHistory(const QString& timer_name)
@@ -135,6 +136,25 @@ bool TimerDb::ChangeTimerTags(const QString& dest_timer_name, const QString& cha
 QString TimerDb::LastError()
 {
 	return last_err_;
+}
+
+bool TimerDb::Open()
+{
+	leveldb::Options opts{};
+	opts.create_if_missing = true;
+	auto status = leveldb::DB::Open(opts, QStrToStl(BasicConfig::TimerDbSavePath), &db_);
+	if (!status.ok()) {
+		ShowErrorMsg("数据库打开失败, 错误原因: " + StlToQStr(status.ToString()), 1);
+		return false;
+	}
+	return true;
+}
+
+void TimerDb::Close()
+{
+	if (db_)
+		delete db_;
+	db_ = nullptr;
 }
 
 QJsonObject TimerDb::TimerItemStoreDataToJsonWithoutToday(const TimerItemStoreData& data)

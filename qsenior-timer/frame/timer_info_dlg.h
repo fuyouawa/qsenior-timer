@@ -13,6 +13,8 @@ public:
 	TimerInfoDlg(QWidget *parent, const TimerItemStoreData& data, const QString& timer_name);
 	~TimerInfoDlg();
 
+	void ClearHistroyItems();
+
 private:
 	void AppendDayTimer(const TimerItemStoreData::DayTimer& timer);
 	Ui::TimerInfoDlgClass ui;

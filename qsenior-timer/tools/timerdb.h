@@ -25,6 +25,9 @@ public:
 
 	QString LastError();
 
+	bool Open();
+	void Close();
+
 private:
 	TimerDb();
 

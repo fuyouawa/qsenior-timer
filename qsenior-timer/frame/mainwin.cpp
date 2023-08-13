@@ -22,7 +22,9 @@ MainWin::MainWin(QWidget* parent)
 
     TimerController::Instance->AutoStartOrClose();
 
+#ifndef _DEBUG
     CheckUpdate(false);
+#endif // !_DEBUG
 }
 
 MainWin::~MainWin()
@@ -106,8 +108,10 @@ void MainWin::on_act_settings_triggered()
 
 void MainWin::on_act_save_local_triggered()
 {
-    timer_table_->Model()->SaveTimers();
-    QMessageBox::information(this, "提示", "保存成功!");
+    
+    if (timer_table_->Model()->SaveTimers()) {
+        QMessageBox::information(this, "提示", "保存成功!");
+    }
 }
 
 void MainWin::on_act_check_update_triggered()

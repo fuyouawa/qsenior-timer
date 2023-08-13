@@ -65,15 +65,16 @@ TimerItemFlags TimerTableModel::GetTimerItemFlags(int row)
     return (TimerItemFlags)item(row, kDataTags)->data(Qt::UserRole).toInt();
 }
 
-void TimerTableModel::SaveTimers()
+bool TimerTableModel::SaveTimers()
 {
     QMap<QString, TimerItemStoreData> total;
     for (size_t i = 0; i < rowCount(); i++) {
         if (!TimerDb::Instance->SaveData(GetTimerName(i), *GetTimerItemStoreData(i))) {
             ShowErrorMsg(TimerDb::Instance->LastError(), 1, msg_parent_);
-            break;
+            return false;
         }
     }
+    return true;
 }
 
 QString TimerTableModel::AutoFormatSecondInData(const TimerItemStoreData& data)

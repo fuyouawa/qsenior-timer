@@ -14,6 +14,12 @@ TimerInfoDlg::~TimerInfoDlg()
 {
 }
 
+void TimerInfoDlg::ClearHistroyItems()
+{
+	for (size_t i = 0; i < ui.table_history->rowCount(); i++)
+		ui.table_history->removeRow(0);
+}
+
 void TimerInfoDlg::AppendDayTimer(const TimerItemStoreData::DayTimer& timer)
 {
 	auto row = ui.table_history->rowCount();
@@ -44,8 +50,7 @@ void TimerInfoDlg::AppendDayTimer(const TimerItemStoreData::DayTimer& timer)
 void TimerInfoDlg::on_btn_load_history_clicked()
 {
 	if (auto opt = TimerDb::Instance->GetTimerHistory(ui.edit_timer_name->text()); opt.IsSome()) {
-		ui.table_history->clear();
-		ui.table_history->setRowCount(0);
+		ClearHistroyItems();
 		auto history = opt.SomeVal();
 		for (auto& item : history) {
 			AppendDayTimer(item);
