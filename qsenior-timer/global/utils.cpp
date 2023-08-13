@@ -86,11 +86,28 @@ void SaveSettings()
 	settings.endGroup();
 }
 
+void ReadUserInfo()
+{
+	QSettings settings{ BasicConfig::UserInfoSavePath, QSettings::IniFormat };
+	settings.beginGroup("Gereral");
+	UserInfo::UserName = settings.value("UserName", "").toString();
+	settings.endGroup();
+}
+
+void SaveUserInfo()
+{
+	QSettings settings{ BasicConfig::UserInfoSavePath, QSettings::IniFormat };
+	settings.beginGroup("Gereral");
+	settings.setValue("UserName", UserInfo::UserName);
+	settings.endGroup();
+}
+
 void InitBasicConfig()
 {
 	BasicConfig::AppDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 	CreateDirIfNoExist(BasicConfig::AppDataDir);
 	BasicConfig::SettingsSavePath = JoinPaths({ BasicConfig::AppDataDir, GetSettingsFileName() });
+	BasicConfig::UserInfoSavePath = JoinPaths({ BasicConfig::AppDataDir, GetUserInfoFileName() });
 	BasicConfig::TimerDbSavePath = JoinPaths({ BasicConfig::AppDataDir, GetTimerDbFileName() });
 
 	QSettings settings{ BasicConfig::SettingsSavePath, QSettings::IniFormat };
@@ -101,6 +118,11 @@ void InitBasicConfig()
 QString GetSettingsFileName()
 {
 	return "Settings.ini";
+}
+
+QString GetUserInfoFileName()
+{
+	return "User-info.ini";
 }
 
 QString GetTimerDbFileName()
@@ -240,4 +262,43 @@ void AutoRegistryStartup()
 	else {
 		registry.remove("QSeniorTimer");
 	}
+}
+
+bool IsRunAsAdmin()
+{
+	BOOL fIsRunAsAdmin = FALSE;
+	PSID pAdministratorsGroup = NULL;
+
+	// Allocate and initialize a SID of the administrators group.
+	SID_IDENTIFIER_AUTHORITY NtAuthority = SECURITY_NT_AUTHORITY;
+	if (AllocateAndInitializeSid(&NtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &pAdministratorsGroup)) {
+		// Determine whether the SID of administrators group is enabled in
+		// the primary access token of the process.
+		if (!CheckTokenMembership(NULL, pAdministratorsGroup, &fIsRunAsAdmin)) {
+			fIsRunAsAdmin = FALSE;
+		}
+		FreeSid(pAdministratorsGroup);
+	}
+
+	return fIsRunAsAdmin;
+}
+
+bool AskForAdmin()
+{
+	wchar_t szPath[MAX_PATH];
+	if (GetModuleFileNameW(NULL, szPath, ARRAYSIZE(szPath))) {
+		SHELLEXECUTEINFO sei = { sizeof(sei) };
+		sei.lpVerb = L"runas";
+		sei.lpFile = szPath;
+		sei.hwnd = NULL;
+		sei.nShow = SW_NORMAL;
+
+		if (!ShellExecuteEx(&sei)) {
+			DWORD dwError = GetLastError();
+			if (dwError == ERROR_CANCELLED) {
+				return false;
+			}
+		}
+	}
+	return true;
 }

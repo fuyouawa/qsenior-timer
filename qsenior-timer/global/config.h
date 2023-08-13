@@ -100,10 +100,17 @@ public:
 class BasicConfig {
 public:
 	inline static QString SettingsSavePath;
+	inline static QString UserInfoSavePath;
 	inline static QString TimerDbSavePath;
 	inline static QString AppDataDir;
 
 	inline static bool IsFirstRunApp;
+};
+
+class UserInfo
+{
+public:
+	inline static QString UserName;
 };
 
 

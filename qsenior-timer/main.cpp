@@ -27,6 +27,13 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	if (!IsRunAsAdmin()) {
+		if (!AskForAdmin())
+			QMessageBox::warning(nullptr, "警告", "如果您不给予管理员权限, 某些功能可能无法正常使用!");
+		else
+			return 0;
+	}
+
     InitBasicConfig();
     ReadSettings();
     if (BasicConfig::IsFirstRunApp) {

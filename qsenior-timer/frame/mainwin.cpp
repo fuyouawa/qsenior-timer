@@ -115,6 +115,10 @@ void MainWin::on_act_check_update_triggered()
     CheckUpdate(true);
 }
 
+void MainWin::on_act_user_msg_triggered()
+{
+}
+
 void MainWin::OnTimerTableSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
     auto row = selected.indexes()[0].row();

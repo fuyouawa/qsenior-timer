@@ -11,6 +11,7 @@
 #include <QStandardPaths>
 #include <QDateTime>
 #include <Windows.h>
+#include <shellapi.h>
 
 #include "global/config.h"
 
@@ -24,9 +25,13 @@ QString FormatSeconds(int sec);
 void ReadSettings();
 void SaveSettings();
 
+void ReadUserInfo();
+void SaveUserInfo();
+
 void InitBasicConfig();
 
 QString GetSettingsFileName();
+QString GetUserInfoFileName();
 QString GetTimerDbFileName();
 
 qint64 GetCurDateStamp();
@@ -42,3 +47,7 @@ QString StlToQStr(const std::string& stl);
 QByteArray StlToQBytes(const std::string& stl);
 
 void AutoRegistryStartup();
+
+bool IsRunAsAdmin();
+
+bool AskForAdmin();
