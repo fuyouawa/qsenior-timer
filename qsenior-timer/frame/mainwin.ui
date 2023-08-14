@@ -57,10 +57,7 @@
      <string>存档</string>
     </property>
     <addaction name="act_save_local"/>
-    <addaction name="separator"/>
-    <addaction name="act_user_msg"/>
-    <addaction name="act_upload_server"/>
-    <addaction name="act_download_server"/>
+    <addaction name="act_cloud_store"/>
    </widget>
    <addaction name="menu_3"/>
    <addaction name="menu"/>
@@ -122,36 +119,6 @@
     <enum>QAction::NoRole</enum>
    </property>
   </action>
-  <action name="act_user_msg">
-   <property name="text">
-    <string>用户信息</string>
-   </property>
-   <property name="toolTip">
-    <string>用户信息</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::NoRole</enum>
-   </property>
-  </action>
-  <action name="act_upload_server">
-   <property name="text">
-    <string>上传存档(云端)</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::NoRole</enum>
-   </property>
-  </action>
-  <action name="act_download_server">
-   <property name="text">
-    <string>下载存档(云端)</string>
-   </property>
-   <property name="toolTip">
-    <string>下载存档(云端)</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::NoRole</enum>
-   </property>
-  </action>
   <action name="act_send_feedback">
    <property name="text">
     <string>发送反馈</string>
@@ -174,6 +141,14 @@
   <action name="act_save_local">
    <property name="text">
     <string>保存存档(本地)</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="act_cloud_store">
+   <property name="text">
+    <string>云存档</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>

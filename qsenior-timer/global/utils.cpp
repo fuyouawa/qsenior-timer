@@ -86,29 +86,12 @@ void SaveSettings()
 	settings.endGroup();
 }
 
-void ReadUserInfo()
-{
-	QSettings settings{ BasicConfig::UserInfoSavePath, QSettings::IniFormat };
-	settings.beginGroup("Gereral");
-	UserInfo::UserName = settings.value("UserName", "").toString();
-	settings.endGroup();
-}
-
-void SaveUserInfo()
-{
-	QSettings settings{ BasicConfig::UserInfoSavePath, QSettings::IniFormat };
-	settings.beginGroup("Gereral");
-	settings.setValue("UserName", UserInfo::UserName);
-	settings.endGroup();
-}
-
 void InitBasicConfig()
 {
 	BasicConfig::AppDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 	CreateDirIfNoExist(BasicConfig::AppDataDir);
 	BasicConfig::SettingsSavePath = JoinPaths({ BasicConfig::AppDataDir, GetSettingsFileName() });
 	BasicConfig::TimerDbSavePath = JoinPaths({ BasicConfig::AppDataDir, GetTimerDbFileName() });
-	BasicConfig::UserInfoSavePath = JoinPaths({ BasicConfig::AppDataDir, GetUserInfoFileName() });
 
 	QSettings settings{ BasicConfig::SettingsSavePath, QSettings::IniFormat };
 	BasicConfig::IsFirstRunApp = settings.value("IsFirstRunApp", true).toBool();
@@ -193,21 +176,8 @@ HDC DrawWindowBorder(HWND hwnd)
 
 QString FormatErrCode(QString tip, DWORD err_code)
 {
-	LPTSTR err_msg = nullptr;
-	FormatMessage(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		NULL,
-		err_code,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(LPTSTR)&err_msg,
-		0,
-		NULL);
 	QString tip_text = tip + "\n失败原因: %1\n错误码: %2\n可根据这个错误码前往[微软官方文档]查询以获取更多信息";
-	if (err_msg)
-		tip_text = tip_text.arg(err_msg).arg(err_code);
-	else
-		tip_text = tip_text.arg("无法分析失败原因").arg(err_code);
-	return tip_text;
+	return tip_text.arg(ErrorCodeToStr(err_code)).arg(err_code);
 }
 
 void ShowErrorMsg(QString err, int lv, QWidget* parent)
@@ -300,4 +270,43 @@ bool AskForAdmin()
 		}
 	}
 	return true;
+}
+
+QString ErrorCodeToStr(DWORD error)
+{
+	LPTSTR err_msg = nullptr;
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL,
+		error,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&err_msg,
+		0,
+		NULL);
+	QString res = TStrToQStr(err_msg);
+	LocalFree(err_msg);
+	return res;
+}
+
+QString TStrToQStr(LPTSTR tstr)
+{
+#ifdef UNICODE
+	return QString::fromWCharArray(tstr);
+#else
+	return QString::fromLocal8Bit(tstr);
+#endif // UNICODE
+}
+
+fustd::Result<QString, DWORD> GetProcessName(DWORD pid)
+{
+	TCHAR buf[MAX_PATH];
+	HANDLE hprocess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
+	if (hprocess) {
+		if (GetModuleBaseName(hprocess, NULL, buf, _countof(buf)) == 0) {
+			CloseHandle(hprocess);
+			return fustd::Ok(TStrToQStr(buf));
+		}
+		CloseHandle(hprocess);
+	}
+	return fustd::Err(GetLastError());
 }

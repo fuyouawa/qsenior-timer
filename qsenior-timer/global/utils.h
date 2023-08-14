@@ -12,6 +12,9 @@
 #include <QDateTime>
 #include <Windows.h>
 #include <shellapi.h>
+#include <Psapi.h>
+
+#include <fustd/generic/result.hpp>
 
 #include "global/config.h"
 
@@ -24,9 +27,6 @@ QString FormatSeconds(int sec);
 
 void ReadSettings();
 void SaveSettings();
-
-void ReadUserInfo();
-void SaveUserInfo();
 
 void InitBasicConfig();
 
@@ -51,3 +51,9 @@ void AutoRegistryStartup();
 bool IsRunAsAdmin();
 
 bool AskForAdmin();
+
+QString ErrorCodeToStr(DWORD error);
+
+QString TStrToQStr(LPTSTR tstr);
+
+fustd::Result<QString, DWORD> GetProcessName(DWORD pid);

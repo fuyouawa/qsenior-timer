@@ -19,21 +19,13 @@ public:
 	static FocusDetector* const Instance;
 	~FocusDetector();
 
-	QString CurProcName();
-	QString PrevProcName();
-
-	QString CurWinName();
-	QString PrevWinName();
-
 	void ScanForceWindow();
 
 private:
 	friend class TimerController;
 
-	TCHAR proc_name_buf[MAX_PATH];
-	TCHAR win_name_buf[MAX_PATH];
-	TCHAR prev_proc_name_buf[MAX_PATH];
-	TCHAR prev_win_name_buf[MAX_PATH];
+	QString cur_proc_name_;
+	QString prev_proc_name_;
 	QTimer timer_;
 
 private:

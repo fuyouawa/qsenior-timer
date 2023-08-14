@@ -8,6 +8,8 @@
         <file>aim.cur</file>
         <file>tip.png</file>
         <file>anymore.png</file>
+        <file>close_eyes.png</file>
+        <file>open_eyes.png</file>
         <file>qsenior-timer.ico</file>
         <file>qsenior-timer.png</file>
     </qresource>

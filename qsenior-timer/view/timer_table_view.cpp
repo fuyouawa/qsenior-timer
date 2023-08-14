@@ -22,6 +22,8 @@ TimerTableView::TimerTableView(QWidget* parent) :
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 
+    setDragEnabled(false);
+
     for (size_t i = 0; i < model_->columnCount(); i++)
     {
         switch (i)

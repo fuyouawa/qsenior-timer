@@ -52,18 +52,14 @@ void CreateTimerItemDlg::mouseMoveEvent(QMouseEvent* event)
 
 void CreateTimerItemDlg::SetProcName(HWND hwnd)
 {
-	char buf[MAX_PATH];
 	DWORD pid;
 	GetWindowThreadProcessId(hwnd, &pid);
-	HANDLE hprocess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
-	if (hprocess) {
-		DWORD size = MAX_PATH;
-		if (QueryFullProcessImageNameA(hprocess, 0, buf, &size)) {
-			ui.edit_proc_name->setText(buf);
-			return;
-		}
+	if (auto res = GetProcessName(pid); res.IsOk()) {
+		ui.edit_proc_name->setText(res.OkVal());
 	}
-	ui.edit_proc_name->setText("自动获取进程名失败!");
+	else {
+		ui.edit_proc_name->setText("无法获取进程名! 失败原因: " + ErrorCodeToStr(res.ErrVal()));
+	}
 }
 
 void CreateTimerItemDlg::BeginScan()

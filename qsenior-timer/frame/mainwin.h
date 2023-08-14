@@ -29,7 +29,7 @@ private slots:
     void on_act_settings_triggered();
     void on_act_save_local_triggered();
     void on_act_check_update_triggered();
-    void on_act_user_msg_triggered();
+    void on_act_cloud_store_triggered();
 
     void OnTimerTableSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
     void OnUpdateCheckFinished(QNetworkReply* reply);
