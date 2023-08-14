@@ -302,7 +302,7 @@ fustd::Result<QString, DWORD> GetProcessName(DWORD pid)
 	TCHAR buf[MAX_PATH];
 	HANDLE hprocess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
 	if (hprocess) {
-		if (GetModuleBaseName(hprocess, NULL, buf, _countof(buf)) == 0) {
+		if (GetModuleBaseName(hprocess, NULL, buf, _countof(buf))) {
 			CloseHandle(hprocess);
 			return fustd::Ok(TStrToQStr(buf));
 		}

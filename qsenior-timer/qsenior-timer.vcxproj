@@ -70,7 +70,7 @@
     <Link />
     <Link>
       <AdditionalLibraryDirectories>E:\Code\C++\Framework\qt-easy-lib\x64\Debug;$(SolutionDir)third-party\leveldb\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>QtEasyLib.lib;leveldb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt6EasyLib.lib;leveldb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
     </Link>
   </ItemDefinitionGroup>
@@ -82,7 +82,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>E:\Code\C++\Framework\qt-easy-lib\x64\Release;$(SolutionDir)third-party\leveldb\release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>QtEasyLib.lib;leveldb.lib;%(AdditionalDependencies);$(Qt_LIBS_)</AdditionalDependencies>
+      <AdditionalDependencies>Qt6EasyLib.lib;leveldb.lib;%(AdditionalDependencies);$(Qt_LIBS_)</AdditionalDependencies>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
     </Link>
   </ItemDefinitionGroup>
