@@ -17,8 +17,18 @@ QByteArray CombineQStrs(std::initializer_list<QString> strs)
 	QByteArray buf{};
 	for (auto& str : strs) {
 		buf.append(str.toUtf8());
+		buf.append('\0');
 	}
 	return buf;
+}
+
+void RestartApp()
+{
+	// Start a new instance of the application
+	QProcess::startDetached(QCoreApplication::applicationFilePath());
+
+	// Quit the current instance
+	QApplication::quit();
 }
 
 void InitBasicConfig() {

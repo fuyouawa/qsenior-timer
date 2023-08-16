@@ -3,6 +3,7 @@
 #include <QtEasyLib/QEasyEventSystem>
 
 struct ResponsedEvent {
-	RequestType request_type;
-	QByteArray resp_val;
+	RequestType type;
 };
+
+struct ConnectedToServerEvent{};

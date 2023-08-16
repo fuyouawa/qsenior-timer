@@ -44,14 +44,17 @@
     <ClCompile Include="frame\loginwin.cpp">
       <Filter>Source Files\frame</Filter>
     </ClCompile>
-    <ClCompile Include="global\uvlooper.cpp">
+    <ClCompile Include="global\client_looper.cpp">
       <Filter>Source Files\global</Filter>
     </ClCompile>
     <ClCompile Include="global\utils.cpp">
       <Filter>Source Files\global</Filter>
     </ClCompile>
-    <ClCompile Include="global\cloud_manager.cpp">
+    <ClCompile Include="global\client_manager.cpp">
       <Filter>Source Files\global</Filter>
+    </ClCompile>
+    <ClCompile Include="frame\connect_server_win.cpp">
+      <Filter>Source Files\frame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,11 +64,14 @@
     <QtMoc Include="frame\loginwin.h">
       <Filter>Header Files\frame</Filter>
     </QtMoc>
-    <QtMoc Include="global\uvlooper.h">
+    <QtMoc Include="global\client_looper.h">
       <Filter>Header Files\global</Filter>
     </QtMoc>
-    <QtMoc Include="global\cloud_manager.h">
+    <QtMoc Include="global\client_manager.h">
       <Filter>Header Files\global</Filter>
+    </QtMoc>
+    <QtMoc Include="frame\connect_server_win.h">
+      <Filter>Header Files\frame</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +79,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="frame\loginwin.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="frame\connect_server_win.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

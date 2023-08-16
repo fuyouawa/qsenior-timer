@@ -50,6 +50,12 @@
          <iconset resource="../resources/res.qrc">
           <normaloff>:/pictures/close_eyes.png</normaloff>:/pictures/close_eyes.png</iconset>
         </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
      </layout>
@@ -78,6 +84,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="btn_login">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>注册</string>
         </property>
