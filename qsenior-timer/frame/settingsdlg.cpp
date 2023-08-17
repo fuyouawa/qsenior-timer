@@ -34,7 +34,7 @@ void SettingsDlg::MappingToConfig()
 
 	SaveSettings();
 
-	QEasyEventBus::Emit(SettingsChangedEvent());
+	qteasylib::EventBus::Emit(SettingsChangedEvent());
 }
 
 void SettingsDlg::on_btn_apply_clicked()

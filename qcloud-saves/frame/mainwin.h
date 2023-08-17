@@ -7,14 +7,14 @@
 #include "global/event_types.h"
 #include "global/utils.h"
 
-class MainWin : public QMainWindow, QEasyEventHandler<ResponsedEvent>, QEasyEventHandler<ConnectedToServerEvent>
+class MainWin : public QMainWindow, qteasylib::EventHandler<ResponsedEvent>, qteasylib::EventHandler<ConnectedToServerEvent>
 {
     Q_OBJECT
 
 public:
     inline static MainWin* Instance = nullptr;
 
-    MainWin(QWidget* parent = nullptr);
+    MainWin(qint64 registry_stamp, QWidget* parent = nullptr);
     ~MainWin();
 
 private slots:

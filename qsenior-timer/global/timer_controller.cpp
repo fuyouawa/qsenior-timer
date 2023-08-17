@@ -8,10 +8,10 @@ TimerController::TimerController(QObject *parent)
     auto_save_local_timer_(this)
 {
     connect(&second_timer_, &QTimer::timeout, [this]() {
-        QEasyEventBus::Emit(SecondUpdateEvent());
+        qteasylib::EventBus::Emit(SecondUpdateEvent());
         });
     connect(&auto_save_local_timer_, &QTimer::timeout, [this]() {
-        QEasyEventBus::Emit(NeedSaveLocalEvent());
+        qteasylib::EventBus::Emit(NeedSaveLocalEvent());
         });
 }
 

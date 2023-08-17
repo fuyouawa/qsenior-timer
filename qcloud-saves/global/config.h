@@ -12,7 +12,6 @@ class UserInfo
 public:
 	inline static QString UserName;
 	inline static QString Password;
-	inline static qint64 RegistryStamp;
 };
 
 class BasicConfig

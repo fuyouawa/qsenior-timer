@@ -9,7 +9,7 @@
 #include "global/hangup_detector.h"
 
 
-class TimerController : public QObject, QEasyEventHandler<SettingsChangedEvent>
+class TimerController : public QObject, qteasylib::EventHandler<SettingsChangedEvent>
 {
 	Q_OBJECT
 

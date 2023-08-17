@@ -12,10 +12,9 @@ LoginWin::~LoginWin()
 
 void LoginWin::on_btn_login_clicked()
 {
-	if (!CheckInput(ui.edit_user_name->text(), ui.edit_password->text())) return;
 	if (QMessageBox::question(this, "警告", "密码一旦创建无法更改!(至少目前没有更改的功能)\n请确保您设定的密码能够记住!") == QMessageBox::Yes) {
 		is_signin_ = false;
-		ClientManager::Instance->ConnectServer();
+		AutoRequest();
 	}
 }
 
@@ -32,10 +31,10 @@ void LoginWin::OnEvent(const ResponsedEvent& event)
 	case kSignin:
 	{
 		auto packet = ClientManager::Instance->DequeuePacket();
-		ClientManager::Instance->DisConnectServer();
 		switch (packet.data.at(0))
 		{
 		case kSuccess:
+			ClientManager::Instance->DisConnectServer();
 			QMessageBox::information(this, "提示", "登录成功!");
 			UserInfo::UserName = ui.edit_user_name->text();
 			UserInfo::Password = ui.edit_password->text();
@@ -51,7 +50,6 @@ void LoginWin::OnEvent(const ResponsedEvent& event)
 	case kLogin:
 	{
 		auto packet = ClientManager::Instance->DequeuePacket();
-		ClientManager::Instance->DisConnectServer();
 		switch (packet.data.at(0))
 		{
 		case kSuccess:
@@ -68,12 +66,17 @@ void LoginWin::OnEvent(const ResponsedEvent& event)
 	default:
 		break;
 	}
+	EnableButtons(true);
 }
 
 void LoginWin::OnEvent(const ConnectedToServerEvent& event)
 {
-	auto data = CombineQStrs({ ui.edit_user_name->text(), ui.edit_password->text() });
-	ClientManager::Instance->Request({ is_signin_ ? kSignin : kLogin,  data });
+	RequestSigninOrLogin(is_signin_);
+}
+
+void LoginWin::OnEvent(const ConnectError& event)
+{
+	QMessageBox::critical(this, "严重错误", "服务器连接失败!\n错误名称: " + event.err_name + "\n错误信息: " + event.err_msg);
 }
 
 bool LoginWin::CheckInput(QString user_name, QString password)
@@ -89,9 +92,36 @@ bool LoginWin::CheckInput(QString user_name, QString password)
 	return true;
 }
 
+void LoginWin::AutoRequest()
+{
+	if (!ClientManager::Instance->IsConnecting())
+		ClientManager::Instance->ConnectServer();
+	else
+		RequestSigninOrLogin(is_signin_);
+}
+
+void LoginWin::RequestSigninOrLogin(bool is_signin)
+{
+	auto user_name = ui.edit_user_name->text();
+	auto password = ui.edit_password->text();
+	if (!CheckInput(user_name, password)) return;
+	EnableButtons(false);
+	if (is_signin_) {
+		ClientManager::Instance->Request(user_name, password, { kSignin, QByteArray() });
+	}
+	else {
+		ClientManager::Instance->Request(user_name, password, { kLogin, CombineQStrs({user_name, password}) });
+	}
+}
+
+void LoginWin::EnableButtons(bool enable)
+{
+	ui.btn_login->setEnabled(enable);
+	ui.btn_signin->setEnabled(enable);
+}
+
 void LoginWin::on_btn_signin_clicked()
 {
-	if (!CheckInput(ui.edit_user_name->text(), ui.edit_password->text())) return;
 	is_signin_ = true;
-	ClientManager::Instance->ConnectServer();
+	AutoRequest();
 }

@@ -3,16 +3,14 @@
 void ClientLooper::on_connect(uv_connect_t* req, int status)
 {
 	if (status < 0) {
-        QMetaObject::invokeMethod(qApp, [=]() {
-            QMessageBox::critical(nullptr, "严重异常", QString("服务器连接失败! \n原因: ") + uv_strerror(status));
-            }, Qt::QueuedConnection);
         Deallocator(req);
-        Instance->stop();
+        emit Instance->connectError(status);
         return;
 	}
 	uv_stream_t* stream = req->handle;
 	uv_read_start(stream, alloc_buffer, on_read);
 	Deallocator(req);
+    Instance->is_connecting_ = true;
 	emit Instance->connectedToServer();
 }
 
@@ -40,6 +38,7 @@ void ClientLooper::on_read(uv_stream_t* tcp, ssize_t nread, const uv_buf_t* buf)
         Instance->handler_.OnDataReceived(buf->base, nread);
 	}
 	else {
+        emit Instance->readError(nread);
 		uv_close((uv_handle_t*)tcp, on_close);
 	}
 
@@ -55,7 +54,8 @@ ClientLooper::ClientLooper(QObject *parent)
 	: QThread(parent),
 	loop_(nullptr),
 	client_(nullptr),
-    handler_()
+    handler_(),
+    is_connecting_(false)
 {}
 
 ClientLooper::~ClientLooper()
@@ -74,11 +74,14 @@ void ClientLooper::run()
 
 	uv_run(loop_, UV_RUN_DEFAULT);
 
+    if (client_)
+        uv_close((uv_handle_t*)client_, on_close);
 	uv_loop_close(loop_);
 }
 
 void ClientLooper::stop()
 {
+    is_connecting_ = false;
     ClearQueue();
 	uv_stop(loop_);
 }

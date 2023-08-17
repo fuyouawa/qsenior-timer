@@ -9,11 +9,11 @@
 
 class TimerTableModel :
 	public QStandardItemModel,
-	QEasyEventHandler<SecondUpdateEvent>,
-	QEasyEventHandler<FocusWindowChangedEvent>,
-	QEasyEventHandler<NeedSaveLocalEvent>,
-	QEasyEventHandler<CursorHangedupEvent>,
-	QEasyEventHandler<CursorUnHangedupEvent>
+	qteasylib::EventHandler<SecondUpdateEvent>,
+	qteasylib::EventHandler<FocusWindowChangedEvent>,
+	qteasylib::EventHandler<NeedSaveLocalEvent>,
+	qteasylib::EventHandler<CursorHangedupEvent>,
+	qteasylib::EventHandler<CursorUnHangedupEvent>
 {
 	Q_OBJECT
 

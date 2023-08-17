@@ -23,8 +23,10 @@ public:
 
 signals:
 	void writeError(int status);
-	void newMsgReceived(PacketBuffer* packet);
+	void readError(int status);
+	void connectError(int status);
 	void connectedToServer();
+	void newMsgReceived(PacketBuffer* packet);
 
 private:
 	class TcpHandler
@@ -58,7 +60,7 @@ private:
 
 	ClientLooper(QObject *parent=nullptr);
 
-	bool Send(const QByteArray& buf);
+	Q_INVOKABLE bool Send(const QByteArray& buf);
 	QByteArray Dequeue();
 
 	void ClearQueue();
@@ -67,4 +69,6 @@ private:
 	uv_tcp_t* client_;
 	QQueue<PacketBuffer*> packets_queue_;
 	TcpHandler handler_;
+
+	bool is_connecting_;
 };

@@ -24,11 +24,14 @@ QByteArray CombineQStrs(std::initializer_list<QString> strs)
 
 void RestartApp()
 {
-	// Start a new instance of the application
 	QProcess::startDetached(QCoreApplication::applicationFilePath());
-
-	// Quit the current instance
 	QApplication::quit();
+}
+
+void SetUserNameAndPassword(const QString& user_name, const QString password)
+{
+	UserInfo::UserName = user_name;
+	UserInfo::Password = password;
 }
 
 void InitBasicConfig() {

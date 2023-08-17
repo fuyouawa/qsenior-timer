@@ -7,7 +7,10 @@
 #include "global/client_manager.h"
 #include "global/event_types.h"
 
-class ConnectServerWin : public QMainWindow, QEasyEventHandler<ResponsedEvent>, QEasyEventHandler<ConnectedToServerEvent>
+class ConnectServerWin : public QMainWindow,
+	qteasylib::EventHandler<ResponsedEvent>,
+	qteasylib::EventHandler<ConnectedToServerEvent>,
+	qteasylib::EventHandler<ConnectError>
 {
 	Q_OBJECT
 
@@ -18,6 +21,7 @@ public:
 private:
 	void OnEvent(const ResponsedEvent& event) override;
 	void OnEvent(const ConnectedToServerEvent& event) override;
+	void OnEvent(const ConnectError& event) override;
 
 	Ui::ConnectServerWinClass ui;
 };

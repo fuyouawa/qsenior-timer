@@ -36,7 +36,6 @@ bool TimerItemDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, co
 {
     if (index.column() == kColumnOperations)
     {
-        QMouseEvent* mouse_event = static_cast<QMouseEvent*>(event);
         int btn_width = option.rect.width();
         switch (event->type())
         {

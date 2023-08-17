@@ -21,7 +21,7 @@ void HangupDetector::ScanCursorHangup()
 	if (QCursor::pos() == prev_cursor_pos_) {
 		is_hangingup_ = true;
 		scan_hangup_timer_.stop();
-		QEasyEventBus::Emit(CursorHangedupEvent());
+		qteasylib::EventBus::Emit(CursorHangedupEvent());
 	}
 }
 
@@ -39,7 +39,7 @@ void HangupDetector::ScanCursorHangupAuxiliary()
 		prev_cursor_pos_ = cur_pos;
 		if (is_hangingup_) {
 			is_hangingup_ = false;
-			QEasyEventBus::Emit(CursorUnHangedupEvent());
+			qteasylib::EventBus::Emit(CursorUnHangedupEvent());
 		}
 	}
 }

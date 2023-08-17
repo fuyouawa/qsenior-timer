@@ -1,11 +1,11 @@
 ﻿#include "mainwin.h"
 
-MainWin::MainWin(QWidget* parent)
+MainWin::MainWin(qint64 registry_stamp, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
 
-	auto registry_data = QDateTime::fromSecsSinceEpoch(UserInfo::RegistryStamp);
+	auto registry_data = QDateTime::fromSecsSinceEpoch(registry_stamp);
 	ui.edit_registry_date->setDateTime(registry_data);
 	ui.edit_user_name->setText(UserInfo::UserName);
 	ui.edit_password->setText(UserInfo::Password);

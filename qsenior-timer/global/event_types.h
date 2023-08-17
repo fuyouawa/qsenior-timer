@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <QString>
-#include <QtEasyLib/QEasyEventSystem>
+#include <qteasylib/event_system.h>
 #include "global/config.h"
 
 struct SecondUpdateEvent {};

@@ -6,7 +6,10 @@
 #include "global/event_types.h"
 #include "global/utils.h"
 
-class LoginWin : public QMainWindow, QEasyEventHandler<ResponsedEvent>, QEasyEventHandler<ConnectedToServerEvent>
+class LoginWin : public QMainWindow,
+	qteasylib::EventHandler<ResponsedEvent>,
+	qteasylib::EventHandler<ConnectedToServerEvent>,
+	qteasylib::EventHandler<ConnectError>
 {
 	Q_OBJECT
 
@@ -22,8 +25,12 @@ private slots:
 private:
 	void OnEvent(const ResponsedEvent& event) override;
 	void OnEvent(const ConnectedToServerEvent& event) override;
+	void OnEvent(const ConnectError& event) override;
 
 	bool CheckInput(QString user_name, QString password);
+	void AutoRequest();
+	void RequestSigninOrLogin(bool is_signin);
+	void EnableButtons(bool enable);
 
 	Ui::LoginWinClass ui;
 

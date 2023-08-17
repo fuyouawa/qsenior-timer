@@ -4,7 +4,7 @@ ConnectServerWin::ConnectServerWin(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
-	ClientManager::Instance->ConnectServer();
+	ClientManager::Instance->AutoConnectServer();
 }
 
 ConnectServerWin::~ConnectServerWin()
@@ -24,8 +24,7 @@ void ConnectServerWin::OnEvent(const ResponsedEvent& event)
 		{
 			qint64 stamp = 0;
 			memcpy(&stamp, &packet.data[1], sizeof(qint64));
-			UserInfo::RegistryStamp = stamp;
-			MainWin::Instance = new MainWin();
+			MainWin::Instance = new MainWin(stamp);
 			MainWin::Instance->show();
 			close();
 			delete this;
@@ -33,7 +32,8 @@ void ConnectServerWin::OnEvent(const ResponsedEvent& event)
 		}
 		default:
 		{
-			ui.lab_msg->setText("疑似缓存文件损坏!\n请重启本程序进行重新登录");
+			ClientManager::Instance->DisConnectServer();
+			ui.lab_msg->setText("获取用户信息失败!\n请重启本程序进行重新登录");
 			break;
 		}
 		}
@@ -46,6 +46,11 @@ void ConnectServerWin::OnEvent(const ResponsedEvent& event)
 
 void ConnectServerWin::OnEvent(const ConnectedToServerEvent& event)
 {
-	auto data = CombineQStrs({ UserInfo::UserName, UserInfo::Password });
-	ClientManager::Instance->Request(Packet({ kGetUserProperty, data }));
+	ClientManager::Instance->AutoRequest({ kGetUserProperty, QByteArray() });
+}
+
+void ConnectServerWin::OnEvent(const ConnectError& event)
+{
+	ui.lab_msg->setText("服务器连接失败!\n错误名称: " + event.err_name + "\n错误信息: " + event.err_msg);
+	ClientManager::Instance->DisConnectServer();
 }
