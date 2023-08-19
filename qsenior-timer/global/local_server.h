@@ -17,6 +17,8 @@ public:
 	LocalServer(QObject *parent=nullptr);
 	~LocalServer();
 
+	QString TempFilePath();
+
 private slots:
 	void OnLocalClientRequest();
 

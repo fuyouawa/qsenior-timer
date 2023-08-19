@@ -27,6 +27,11 @@ LocalServer::LocalServer(QObject *parent)
 LocalServer::~LocalServer()
 {}
 
+QString LocalServer::TempFilePath()
+{
+	return temp_file_.fileName();
+}
+
 void LocalServer::OnLocalClientRequest()
 {
 	auto data = client_socket_->readAll();
@@ -35,7 +40,10 @@ void LocalServer::OnLocalClientRequest()
 	case kGetTimersTemp:
 	{
 		if (temp_file_.open()) {
-			QTextStream out(&temp_file_);
+			QFile file{ "E:\\Resources\\Test\\temp.txt" };
+			file.open(QIODevice::WriteOnly);
+			//QTextStream out(&temp_file_);
+			QTextStream out(&file);
 			QJsonObject total;
 			TimerDb::Instance->ForeachBuffer([this, &total](const QString& timer_name, const QByteArray& data) {
 				total[timer_name] = QString::fromUtf8(data);

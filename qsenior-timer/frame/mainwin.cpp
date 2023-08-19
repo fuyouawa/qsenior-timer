@@ -121,7 +121,10 @@ void MainWin::on_act_check_update_triggered()
 
 void MainWin::on_act_cloud_store_triggered()
 {
-
+    QProcess proc;
+    QStringList arguments;
+    arguments << LocalServer::Instance->TempFilePath();
+    proc.start("QTimerCloud.exe", arguments);
 }
 
 void MainWin::OnTimerTableSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)

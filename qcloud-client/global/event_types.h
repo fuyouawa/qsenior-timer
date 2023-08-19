@@ -19,5 +19,5 @@ struct ConnectErrorEvent: public UvlibErrorEvent {};
 
 struct LocalServerResponsedEvent
 {
-	LocalResponseCode code;
+	QByteArray data;
 };

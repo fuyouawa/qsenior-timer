@@ -27,13 +27,13 @@ void ConnectServerWin::OnEvent(const ResponsedEvent& event)
 			memcpy(&stamp, &packet.data[1], sizeof(qint64));
 			MainWin::Instance = new MainWin(stamp);
 			MainWin::Instance->show();
-			close();
-			delete this;
+			this->deleteLater();
 			break;
 		}
 		default:
 		{
 			ui.lab_msg->setText("获取用户信息失败!\n请重启本程序进行重新登录");
+			ClientManager::Instance->DisConnectServer();
 			break;
 		}
 		}

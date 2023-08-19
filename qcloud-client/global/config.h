@@ -26,7 +26,8 @@ enum RequestType
 {
 	kSignin,
 	kLogin,
-	kGetUserProperty
+	kGetUserProperty,
+	kUploadTimers
 };
 
 enum ResponseCode

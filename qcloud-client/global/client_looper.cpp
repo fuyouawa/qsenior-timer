@@ -45,6 +45,15 @@ void ClientLooper::on_read(uv_stream_t* tcp, ssize_t nread, const uv_buf_t* buf)
 	Deallocator(buf->base);
 }
 
+void ClientLooper::stop_async_cb(uv_async_t* handle)
+{
+    uv_stop(Instance->loop_);
+    uv_walk(Instance->loop_, [](uv_handle_t* handle, void* arg) {
+        if (!uv_is_closing(handle))
+            uv_close(handle, on_close);
+        }, NULL);
+}
+
 void ClientLooper::Deallocator(void* ptr)
 {
 	free(ptr);
@@ -66,26 +75,27 @@ void ClientLooper::run()
 {
 	loop_ = uv_default_loop();
 	client_ = Allocator<uv_tcp_t>(1);
+    stop_async_ = Allocator<uv_async_t>(1);
 	uv_tcp_init(loop_, client_);
 
 	sockaddr_in dest;
 	uv_ip4_addr("127.0.0.1", kPort, &dest);
 	uv_tcp_connect(Allocator<uv_connect_t>(1), client_, (const struct sockaddr*)&dest, on_connect);
 
+    uv_async_init(loop_, stop_async_, stop_async_cb);
+
 	uv_run(loop_, UV_RUN_DEFAULT);
 
-    if (client_)
-        uv_close((uv_handle_t*)client_, on_close);
 	uv_loop_close(loop_);
 
+    is_connecting_ = false;
     emit eventLoopStopped();
 }
 
 void ClientLooper::stop()
 {
-    is_connecting_ = false;
     ClearQueue();
-	uv_stop(loop_);
+    uv_async_send(stop_async_);
 }
 
 bool ClientLooper::Send(const QByteArray& buf)

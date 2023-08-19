@@ -34,9 +34,11 @@ void SetUserNameAndPassword(const QString& user_name, const QString password)
 	UserInfo::Password = password;
 }
 
-void InitBasicConfig() {
+void InitBasicConfig(char* argv[]) {
 	BasicConfig::AppDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 	BasicConfig::UserInfoFilePath = JoinPaths({ BasicConfig::AppDataDir, "Userinfo.ini" });
+	//BasicConfig::TempFilePath = argv[1];
+	BasicConfig::TempFilePath = "E:\\Resources\\Test\\temp.txt";
 }
 
 QString JoinPaths(std::initializer_list<QString> parts)

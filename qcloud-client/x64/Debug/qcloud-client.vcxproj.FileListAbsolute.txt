@@ -1,0 +1,1 @@
+E:\Code\C++\Qt6\qsenior-timer\qcloud-client\x64\Debug\qcloud-client.vcxproj.CopyComplete

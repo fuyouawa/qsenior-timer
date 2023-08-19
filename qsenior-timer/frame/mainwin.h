@@ -4,12 +4,14 @@
 #include <QTimer>
 #include <QDesktopServices>
 #include <QSystemTrayIcon>
+#include <QProcess>
 #include "ui_mainwin.h"
 #include "view/timer_table_view.h"
 #include "global/event_types.h"
 #include "global/timer_controller.h"
 #include "frame/settingsdlg.h"
 #include "frame/create_timer_item_dlg.h"
+#include "global/local_server.h"
 
 class MainWin : public QMainWindow
 {

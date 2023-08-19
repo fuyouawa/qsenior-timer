@@ -8,8 +8,8 @@ async def handle_client(reader: asyncio.StreamReader, writer: asyncio.StreamWrit
             if not header:
                 print("Client disconnected!")
                 break
-        except ConnectionResetError:
-            print("Client disconnected!")
+        except Exception as e:
+            print("Client disconnected: ", e)
             break
         buf_size = int.from_bytes(header, 'little')
         buf = await reader.readexactly(buf_size)

@@ -9,7 +9,7 @@ LocalClient::LocalClient(QObject *parent)
 	socket_.connectToServer(kLocalCommonName);
 
 	connect(&socket_, &QLocalSocket::readyRead, [this]() {
-		qteasylib::EventBus::Emit(LocalServerResponsedEvent({ (LocalResponseCode)socket_.readAll().at(0) }));
+		qteasylib::EventBus::Emit(LocalServerResponsedEvent({ socket_.readAll() }));
 		});
 }
 

@@ -51,10 +51,13 @@ private:
 	static void alloc_buffer(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buf);
 	static void on_close(uv_handle_t* handle);
 	static void on_read(uv_stream_t* tcp, ssize_t nread, const uv_buf_t* buf);
+	static void stop_async_cb(uv_async_t* handle);
 
 	template<class T>
 	static T* Allocator(size_t count) {
-		return (T*)malloc(sizeof(T) * count);
+		auto ptr= (T*)malloc(sizeof(T) * count);
+		memset(ptr, 0, sizeof(T) * count);
+		return ptr;
 	}
 	static void Deallocator(void* ptr);
 
@@ -67,6 +70,7 @@ private:
 
 	uv_loop_t* loop_;
 	uv_tcp_t* client_;
+	uv_async_t* stop_async_;
 	QQueue<PacketBuffer*> packets_queue_;
 	TcpHandler handler_;
 

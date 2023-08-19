@@ -8,7 +8,7 @@
 
 QString JoinPaths(std::initializer_list<QString> parts);
 
-void InitBasicConfig();
+void InitBasicConfig(char* argv[]);
 
 void ReadUserInfo();
 void SaveUserInfo();

@@ -7,8 +7,14 @@
 #include "ui_mainwin.h"
 #include "global/event_types.h"
 #include "global/utils.h"
+#include "global/client_manager.h"
+#include "global/local_client.h"
 
-class MainWin : public QMainWindow, qteasylib::EventHandler<ResponsedEvent>, qteasylib::EventHandler<ConnectedToServerEvent>
+class MainWin : public QMainWindow,
+    qteasylib::EventHandler<ResponsedEvent>,
+    qteasylib::EventHandler<ConnectedToServerEvent>,
+    qteasylib::EventHandler<LocalServerResponsedEvent>,
+    qteasylib::EventHandler<ConnectErrorEvent>
 {
     Q_OBJECT
 
@@ -27,6 +33,13 @@ private slots:
 private:
     void OnEvent(const ResponsedEvent& event) override;
     void OnEvent(const ConnectedToServerEvent& event) override;
+    void OnEvent(const LocalServerResponsedEvent& event) override;
+    void OnEvent(const ConnectErrorEvent& event) override;
+
+    void ErrorOccurred();
+    void AppendLog(const QString& msg);
+
+    bool is_upload_;
 
     Ui::MainWinClass ui;
 };

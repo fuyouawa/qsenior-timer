@@ -136,7 +136,7 @@ bool TimerDb::ForeachBuffer(const std::function<bool(const QString&, const QByte
 		}
 	}
 	delete iter;
-	return false;
+	return suc;
 }
 
 QString TimerDb::LastError()
