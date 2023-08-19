@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CCC0FD72-9191-4EC1-AEBD-41F027008F6B}</ProjectGuid>
+    <ProjectGuid>{8F23A446-4556-4E35-9A9B-D1FB0E1263BD}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
@@ -37,7 +37,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>msvc</QtInstall>
-    <QtModules>core;gui;network;widgets</QtModules>
+    <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -48,6 +48,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
+    <Import Project="..\third-party\libuv\debug\libuv.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -55,35 +56,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <TargetName>QSeniorTimer</TargetName>
+    <TargetName>QTimerCloud</TargetName>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <TargetName>QSeniorTimer</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)qsenior-timer\;E:\Code\C++\Framework\qt-easy-lib\include;$(SolutionDir)third-party\;$(SolutionDir)common\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)third-party;$(SolutionDir)qcloud-client;E:\Code\C++\Framework\qt-easy-lib\include;$(SolutionDir)common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <Link />
-    <Link>
-      <AdditionalLibraryDirectories>E:\Code\C++\Framework\qt-easy-lib\x64\Debug;$(SolutionDir)third-party\leveldb\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Qt6EasyLib.lib;leveldb.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)qsenior-timer\;E:\Code\C++\Framework\qt-easy-lib\include;$(SolutionDir)third-party\;%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>E:\Code\C++\Framework\qt-easy-lib\x64\Release;$(SolutionDir)third-party\leveldb\release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Qt6EasyLib.lib;leveldb.lib;%(AdditionalDependencies);$(Qt_LIBS_)</AdditionalDependencies>
-      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
+      <AdditionalLibraryDirectories>E:\Code\C++\Framework\qt-easy-lib\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Qt6EasyLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -92,7 +77,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -105,7 +89,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>MaxSpeed</Optimization>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -113,61 +96,49 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <QtUic Include="frame\create_timer_item_dlg.ui" />
-    <QtUic Include="frame\edit_timer_dlg.ui" />
+    <QtUic Include="frame\connect_server_win.ui" />
+    <QtUic Include="frame\loginwin.ui" />
     <QtUic Include="frame\mainwin.ui" />
-    <QtUic Include="frame\timer_info_dlg.ui" />
-    <QtUic Include="settingsdlg.ui" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="delegate\timer_item_delegrate.h" />
-    <QtMoc Include="frame\create_timer_item_dlg.h" />
-    <QtMoc Include="frame\mainwin.h" />
-    <QtMoc Include="model\timer_table_model.h" />
-    <QtMoc Include="view\timer_table_header_view.h" />
-    <QtMoc Include="view\timer_table_view.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="delegate\timer_item_delegrate.cpp" />
-    <ClCompile Include="frame\create_timer_item_dlg.cpp" />
-    <ClCompile Include="frame\edit_timer_dlg.cpp" />
-    <ClCompile Include="frame\mainwin.cpp" />
-    <ClCompile Include="frame\settingsdlg.cpp" />
-    <ClCompile Include="frame\timer_info_dlg.cpp" />
-    <ClCompile Include="global\config.cpp" />
-    <ClCompile Include="global\focus_detector.cpp" />
-    <ClCompile Include="global\hangup_detector.cpp" />
-    <ClCompile Include="global\local_server.cpp" />
-    <ClCompile Include="global\timer_controller.cpp" />
-    <ClCompile Include="global\utils.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="model\timer_table_model.cpp" />
-    <ClCompile Include="tools\timerdb.cpp" />
-    <ClCompile Include="view\timer_table_header_view.cpp" />
-    <ClCompile Include="view\timer_table_view.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="resources\res.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="frame\timer_info_dlg.h" />
-    <QtMoc Include="frame\edit_timer_dlg.h" />
-    <ClInclude Include="global\event_types.h" />
-    <QtMoc Include="global\hangup_detector.h" />
-    <QtMoc Include="global\local_server.h" />
-    <ClInclude Include="resources\resource.h" />
-    <QtMoc Include="tools\timerdb.h" />
-    <QtMoc Include="global\timer_controller.h" />
-    <ClInclude Include="global\utils.h" />
-    <QtMoc Include="global\focus_detector.h" />
-    <QtMoc Include="frame\settingsdlg.h" />
+    <Image Include="resources\qcloud-client.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\qcloud-client.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="frame\connect_server_win.cpp" />
+    <ClCompile Include="frame\loginwin.cpp" />
+    <ClCompile Include="frame\mainwin.cpp" />
+    <ClCompile Include="global\client_looper.cpp" />
+    <ClCompile Include="global\client_manager.cpp" />
+    <ClCompile Include="global\local_client.cpp" />
+    <ClCompile Include="global\utils.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="frame\connect_server_win.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="frame\loginwin.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="frame\mainwin.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="global\client_looper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="global\client_manager.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="global\config.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resources\qsenior-timer.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="resources\qsenior-timer.ico" />
+    <ClInclude Include="global\event_types.h" />
+    <QtMoc Include="global\local_client.h" />
+    <ClInclude Include="global\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

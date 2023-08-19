@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/pictures">
+        <file>close_eyes.png</file>
+        <file>open_eyes.png</file>
+        <file>poster.png</file>
+        <file>saves.png</file>
+        <file>qcloud-client.ico</file>
+        <file>download.png</file>
+        <file>delete.png</file>
+        <file>upload.png</file>
+    </qresource>
+</RCC>

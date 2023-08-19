@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qsenior-timer", "qsenior-timer\qsenior-timer.vcxproj", "{CCC0FD72-9191-4EC1-AEBD-41F027008F6B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qcloud-saves", "qcloud-saves\qcloud-saves.vcxproj", "{8F23A446-4556-4E35-9A9B-D1FB0E1263BD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qcloud-client", "qcloud-client\qcloud-client.vcxproj", "{8F23A446-4556-4E35-9A9B-D1FB0E1263BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

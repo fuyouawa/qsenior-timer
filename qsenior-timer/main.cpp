@@ -40,7 +40,10 @@ int main(int argc, char *argv[])
     if (BasicConfig::IsFirstRunApp) {
         AutoRegistryStartup();
     }
-	TimerDb::Instance->Open();
+	if (!TimerDb::Instance->Open()) {
+		ShowErrorMsg("数据库文件打开失败!", 0);
+		return -1;
+	}
 	int res = 0;
 	{
 		MainWin w;

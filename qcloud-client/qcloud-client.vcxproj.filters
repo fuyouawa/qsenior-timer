@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>qml;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>qrc;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+    </Filter>
+    <Filter Include="Source Files\frame">
+      <UniqueIdentifier>{88560da6-3595-481a-b70c-d1f3eb6f6ba6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\frame">
+      <UniqueIdentifier>{f0aa1f14-68ae-46f6-9c45-43f4a59eebf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\global">
+      <UniqueIdentifier>{c7fc5334-5b49-4f7c-810f-4cd418b1e3f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\global">
+      <UniqueIdentifier>{fd93df5f-bcee-46f8-b1c8-44cf994a09a5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="frame\mainwin.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="frame\loginwin.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="frame\connect_server_win.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="resources\res.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\qcloud-client.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\qcloud-client.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="frame\connect_server_win.cpp">
+      <Filter>Source Files\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="frame\loginwin.cpp">
+      <Filter>Source Files\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="frame\mainwin.cpp">
+      <Filter>Source Files\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="global\client_looper.cpp">
+      <Filter>Source Files\global</Filter>
+    </ClCompile>
+    <ClCompile Include="global\client_manager.cpp">
+      <Filter>Source Files\global</Filter>
+    </ClCompile>
+    <ClCompile Include="global\utils.cpp">
+      <Filter>Source Files\global</Filter>
+    </ClCompile>
+    <ClCompile Include="global\local_client.cpp">
+      <Filter>Source Files\global</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="frame\connect_server_win.h">
+      <Filter>Header Files\frame</Filter>
+    </QtMoc>
+    <QtMoc Include="frame\loginwin.h">
+      <Filter>Header Files\frame</Filter>
+    </QtMoc>
+    <QtMoc Include="frame\mainwin.h">
+      <Filter>Header Files\frame</Filter>
+    </QtMoc>
+    <QtMoc Include="global\client_looper.h">
+      <Filter>Header Files\global</Filter>
+    </QtMoc>
+    <QtMoc Include="global\client_manager.h">
+      <Filter>Header Files\global</Filter>
+    </QtMoc>
+    <QtMoc Include="global\local_client.h">
+      <Filter>Header Files\global</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="global\config.h">
+      <Filter>Header Files\global</Filter>
+    </ClInclude>
+    <ClInclude Include="global\event_types.h">
+      <Filter>Header Files\global</Filter>
+    </ClInclude>
+    <ClInclude Include="global\utils.h">
+      <Filter>Header Files\global</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

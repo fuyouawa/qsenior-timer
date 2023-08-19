@@ -18,10 +18,12 @@ public:
 	~TimerDb();
 
 	bool SaveData(const QString& timer_name, const TimerItemStoreData& data);
-	bool ForeachData(std::function<void(const QString&, const TimerItemStoreData&)> callback);
+	bool ForeachData(const std::function<void(const QString&, const TimerItemStoreData&)>& callback);
 	fustd::Option<QList<TimerItemStoreData::DayTimer>> GetTimerHistory(const QString& timer_name);
 	bool ChangeTimerName(const QString& dest_timer_name, const QString& change);
 	bool ChangeTimerTags(const QString& dest_timer_name, const QString& change);
+
+	bool ForeachBuffer(const std::function<bool(const QString&, const QByteArray&)>& callback);
 
 	QString LastError();
 

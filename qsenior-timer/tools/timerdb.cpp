@@ -49,35 +49,27 @@ bool TimerDb::SaveData(const QString& timer_name, const TimerItemStoreData& data
 	return true;
 }
 
-bool TimerDb::ForeachData(std::function<void(const QString&, const TimerItemStoreData&)> callback)
+bool TimerDb::ForeachData(const std::function<void(const QString&, const TimerItemStoreData&)>& callback)
 {
-	QJsonDocument json_doc_tmp;
-	QJsonParseError parse_err_tmp;
-	bool success = true;
-
-	auto iter = db_->NewIterator(leveldb::ReadOptions());
-	for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
-		json_doc_tmp = QJsonDocument::fromJson(StlToQBytes(iter->value().ToString()), &parse_err_tmp);
-		if (parse_err_tmp.error != QJsonParseError::NoError) {
-			SetLastErr("从数据库中读取计时器失败!\n原因: " + parse_err_tmp.errorString());
-			success = false;
-			break;
+	return ForeachBuffer([this, &callback](const QString& timer_name, const QByteArray& data) {
+		QJsonParseError parse_err;
+		auto doc = QJsonDocument::fromJson(data, &parse_err);
+		if (parse_err.error != QJsonParseError::NoError) {
+			SetLastErr("从数据库中读取计时器失败!\n原因: " + parse_err.errorString());
+			return false;
 		}
-		if (!json_doc_tmp.isObject()) {
+		if (!doc.isObject()) {
 			DbBrokenError();
-			success = false;
-			break;
+			return false;
 		}
-		if (auto opt = JsonToTimerItemStoreDataSafed(json_doc_tmp.object()); opt.IsSome())
-			callback(StlToQStr(iter->key().ToString()), opt.SomeVal());
+		if (auto opt = JsonToTimerItemStoreDataSafed(doc.object()); opt.IsSome())
+			callback(timer_name, opt.SomeVal());
 		else {
 			DbBrokenError();
-			success = false;
-			break;
+			return false;
 		}
-	}
-	delete iter;
-	return success;
+		return true;
+		});
 }
 
 fustd::Option<QList<TimerItemStoreData::DayTimer>> TimerDb::GetTimerHistory(const QString& timer_name)
@@ -130,6 +122,20 @@ bool TimerDb::ChangeTimerTags(const QString& dest_timer_name, const QString& cha
 		status = res.ErrVal();
 	}
 	SetLastErr("计时器: " + dest_timer_name + "的名称在数据库中修改失败!\n原因: " + StlToQStr(status.ToString()));
+	return false;
+}
+
+bool TimerDb::ForeachBuffer(const std::function<bool(const QString&, const QByteArray&)>& callback)
+{
+	bool suc = true;
+	auto iter = db_->NewIterator(leveldb::ReadOptions());
+	for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
+		if (!callback(StlToQStr(iter->key().ToString()), StlToQBytes(iter->value().ToString()))) {
+			suc = false;
+			break;
+		}
+	}
+	delete iter;
 	return false;
 }
 

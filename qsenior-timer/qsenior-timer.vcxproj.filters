@@ -107,6 +107,9 @@
     <ClCompile Include="global\hangup_detector.cpp">
       <Filter>Source Files\global</Filter>
     </ClCompile>
+    <ClCompile Include="global\local_server.cpp">
+      <Filter>Source Files\global</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="frame\mainwin.ui">
@@ -168,6 +171,9 @@
       <Filter>Header Files\frame</Filter>
     </QtMoc>
     <QtMoc Include="global\hangup_detector.h">
+      <Filter>Header Files\global</Filter>
+    </QtMoc>
+    <QtMoc Include="global\local_server.h">
       <Filter>Header Files\global</Filter>
     </QtMoc>
   </ItemGroup>
