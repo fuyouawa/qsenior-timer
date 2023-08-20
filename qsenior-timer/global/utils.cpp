@@ -92,6 +92,7 @@ void InitBasicConfig()
 	CreateDirIfNoExist(BasicConfig::AppDataDir);
 	BasicConfig::SettingsSavePath = JoinPaths({ BasicConfig::AppDataDir, GetSettingsFileName() });
 	BasicConfig::TimerDbSavePath = JoinPaths({ BasicConfig::AppDataDir, GetTimerDbFileName() });
+	BasicConfig::TempFilePath = JoinPaths({ BasicConfig::AppDataDir, "TEMP" });
 
 	QSettings settings{ BasicConfig::SettingsSavePath, QSettings::IniFormat };
 	BasicConfig::IsFirstRunApp = settings.value("IsFirstRunApp", true).toBool();

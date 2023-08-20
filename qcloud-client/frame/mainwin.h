@@ -7,14 +7,11 @@
 #include "ui_mainwin.h"
 #include "global/event_types.h"
 #include "global/utils.h"
-#include "global/client_manager.h"
+#include "global/socket_manager.h"
 #include "global/local_client.h"
 
 class MainWin : public QMainWindow,
-    qteasylib::EventHandler<ResponsedEvent>,
-    qteasylib::EventHandler<ConnectedToServerEvent>,
-    qteasylib::EventHandler<LocalServerResponsedEvent>,
-    qteasylib::EventHandler<ConnectErrorEvent>
+    qteasylib::EventHandler<LocalServerResponsedEvent>
 {
     Q_OBJECT
 
@@ -30,16 +27,16 @@ private slots:
     void on_btn_upload_saves_clicked();
     void on_btn_download_saves_clicked();
 
-private:
-    void OnEvent(const ResponsedEvent& event) override;
-    void OnEvent(const ConnectedToServerEvent& event) override;
-    void OnEvent(const LocalServerResponsedEvent& event) override;
-    void OnEvent(const ConnectErrorEvent& event) override;
-
-    void ErrorOccurred();
     void AppendLog(const QString& msg);
+    void AppendErrLog(const QString& msg);
 
-    bool is_upload_;
+private:
+    void OnEvent(const LocalServerResponsedEvent& event);
 
+    void EnableSavesOperBtns(bool enable);
+
+    SocketManager socket_;
     Ui::MainWinClass ui;
+    QByteArray temp_;
+    bool is_upload_;
 };

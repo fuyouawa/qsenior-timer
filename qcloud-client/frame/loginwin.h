@@ -1,15 +1,13 @@
 ﻿#pragma once
 
 #include <QMainWindow>
+#include <QMessageBox>
 #include "ui_loginwin.h"
-#include "global/client_manager.h"
 #include "global/event_types.h"
 #include "global/utils.h"
+#include "global/socket_manager.h"
 
-class LoginWin : public QMainWindow,
-	qteasylib::EventHandler<ResponsedEvent>,
-	qteasylib::EventHandler<ConnectedToServerEvent>,
-	qteasylib::EventHandler<ConnectErrorEvent>
+class LoginWin : public QMainWindow
 {
 	Q_OBJECT
 
@@ -23,16 +21,12 @@ private slots:
 	void on_btn_view_pwd_clicked(bool checked);
 
 private:
-	void OnEvent(const ResponsedEvent& event) override;
-	void OnEvent(const ConnectedToServerEvent& event) override;
-	void OnEvent(const ConnectErrorEvent& event) override;
-
 	bool CheckInput(QString user_name, QString password);
 	void AutoRequest();
 	void RequestSigninOrLogin(bool is_signin);
 	void EnableButtons(bool enable);
 
 	Ui::LoginWinClass ui;
-
+	SocketManager socket_;
 	bool is_signin_;
 };

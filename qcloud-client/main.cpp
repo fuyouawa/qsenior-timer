@@ -27,9 +27,6 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    //if (argc < 2) {
-    //    return -1;
-    //}
     InitBasicConfig(argv);
     ReadUserInfo();
     LoginWin* login_win = nullptr;

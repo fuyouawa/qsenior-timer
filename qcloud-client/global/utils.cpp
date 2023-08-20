@@ -38,7 +38,7 @@ void InitBasicConfig(char* argv[]) {
 	BasicConfig::AppDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 	BasicConfig::UserInfoFilePath = JoinPaths({ BasicConfig::AppDataDir, "Userinfo.ini" });
 	//BasicConfig::TempFilePath = argv[1];
-	BasicConfig::TempFilePath = "E:\\Resources\\Test\\temp.txt";
+	BasicConfig::TempFilePath = "C:\\Users\\29071\\AppData\\Roaming\\QSeniorTimer\\TEMP";
 }
 
 QString JoinPaths(std::initializer_list<QString> parts)

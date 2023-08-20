@@ -3,6 +3,8 @@ import time
 from pathlib import Path
 from config import *
 import hashlib
+import json
+import plyvel
 
 
 def sha256_str(s: str):
@@ -94,9 +96,14 @@ class UserSaves:
     def __init__(self, user_name_sha256: bytes):
         user_name = UserUtils.find_user_name_by_sha256(user_name_sha256)
         if user_name:
+            self.valid = True
             self.property_path = Path(user_data_dir) / user_name / property_file_name
         else:
+            self.valid = False
             self.property_path = Path()
+
+    def is_valid(self):
+        return self.valid
 
     def password(self) -> str | None:
         try:
@@ -127,3 +134,29 @@ class UserSaves:
             return int(config['General']['RegistryTimeStamp'])
         except Exception as e:
             return None
+
+
+def save_timers(user_name: str, data: bytes):
+    jdata: dict[str, str] = json.loads(data)
+    db = plyvel.DB(str(Path(user_data_dir) / user_name / 'Timer-DB'), create_if_missing=True)
+    for timer, record in jdata.items():
+        db.put(timer.encode('utf-8'), record.encode('utf-8'))
+    db.close()
+
+
+def load_timers(user_name: str) -> dict[str, str] | None:
+    db_path = Path(user_data_dir) / user_name / 'Timer-DB'
+
+    # Check if the directory exists
+    if not db_path.exists():
+        return None
+
+    db = plyvel.DB(str(db_path), create_if_missing=True)
+
+    data_dict = {}
+    for key, value in db.iterator():
+        data_dict[key.decode('utf-8')] = value.decode('utf-8')
+
+    db.close()
+
+    return data_dict

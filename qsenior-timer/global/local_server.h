@@ -1,11 +1,11 @@
 #pragma once
 #include <QLocalServer>
 #include <QLocalSocket>
-#include <QTemporaryFile>
 #include <QObject>
 #include "global/utils.h"
 #include "tools/timerdb.h"
 #include "local_common.h"
+#include "global/event_types.h"
 
 class LocalServer  : public QObject
 {
@@ -17,13 +17,10 @@ public:
 	LocalServer(QObject *parent=nullptr);
 	~LocalServer();
 
-	QString TempFilePath();
-
 private slots:
 	void OnLocalClientRequest();
 
 private:
-	QTemporaryFile temp_file_;
 	QLocalServer server_;
 	QLocalSocket* client_socket_;
 };

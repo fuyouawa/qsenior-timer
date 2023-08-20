@@ -13,3 +13,7 @@ struct FocusWindowChangedEvent {
 	QString prev_proc;
 	QString cur_proc;
 };
+
+struct NeedAssignNewTimersEvent {
+	QJsonObject timers_obj;
+};

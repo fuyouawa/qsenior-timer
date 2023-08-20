@@ -64,6 +64,12 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="global\local_client.cpp">
+      <Filter>Source Files\global</Filter>
+    </ClCompile>
+    <ClCompile Include="global\utils.cpp">
+      <Filter>Source Files\global</Filter>
+    </ClCompile>
     <ClCompile Include="frame\connect_server_win.cpp">
       <Filter>Source Files\frame</Filter>
     </ClCompile>
@@ -73,20 +79,25 @@
     <ClCompile Include="frame\mainwin.cpp">
       <Filter>Source Files\frame</Filter>
     </ClCompile>
-    <ClCompile Include="global\client_looper.cpp">
-      <Filter>Source Files\global</Filter>
-    </ClCompile>
-    <ClCompile Include="global\client_manager.cpp">
-      <Filter>Source Files\global</Filter>
-    </ClCompile>
-    <ClCompile Include="global\utils.cpp">
-      <Filter>Source Files\global</Filter>
-    </ClCompile>
-    <ClCompile Include="global\local_client.cpp">
+    <ClCompile Include="global\socket_manager.cpp">
       <Filter>Source Files\global</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="global\utils.h">
+      <Filter>Header Files\global</Filter>
+    </ClInclude>
+    <ClInclude Include="global\config.h">
+      <Filter>Header Files\global</Filter>
+    </ClInclude>
+    <ClInclude Include="global\event_types.h">
+      <Filter>Header Files\global</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="global\local_client.h">
+      <Filter>Header Files\global</Filter>
+    </QtMoc>
     <QtMoc Include="frame\connect_server_win.h">
       <Filter>Header Files\frame</Filter>
     </QtMoc>
@@ -96,25 +107,8 @@
     <QtMoc Include="frame\mainwin.h">
       <Filter>Header Files\frame</Filter>
     </QtMoc>
-    <QtMoc Include="global\client_looper.h">
+    <QtMoc Include="global\socket_manager.h">
       <Filter>Header Files\global</Filter>
     </QtMoc>
-    <QtMoc Include="global\client_manager.h">
-      <Filter>Header Files\global</Filter>
-    </QtMoc>
-    <QtMoc Include="global\local_client.h">
-      <Filter>Header Files\global</Filter>
-    </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="global\config.h">
-      <Filter>Header Files\global</Filter>
-    </ClInclude>
-    <ClInclude Include="global\event_types.h">
-      <Filter>Header Files\global</Filter>
-    </ClInclude>
-    <ClInclude Include="global\utils.h">
-      <Filter>Header Files\global</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

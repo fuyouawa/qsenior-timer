@@ -3,9 +3,10 @@ from utils import *
 
 def request_process(request: RequestData):
     if request.req_type != RequestType.LOG_IN:
-        if not UserUtils.exists_sha256(request.user_name_sha256):
+        user = UserSaves(request.user_name_sha256)
+        if not user.is_valid():
             return ResponseData(ResponseCode.USER_NAME_ERR)
-        elif UserSaves(request.user_name_sha256).password_sha256() != request.password_sha256:
+        elif user.password_sha256() != request.password_sha256:
             return ResponseData(ResponseCode.PASSWORD_ERR)
 
     if request.req_type == RequestType.SIGN_IN:
@@ -14,6 +15,10 @@ def request_process(request: RequestData):
         return request_login(request)
     elif request.req_type == RequestType.GET_USER_PROPERTY:
         return request_get_user_property(request)
+    elif request.req_type == RequestType.UPLOAD_TIMERS:
+        return request_upload_timers(request)
+    elif request.req_type == RequestType.DOWNLOAD_TIMERS:
+        return request_download_timers(request)
 
     raise ValueError("未知请求类型!")
 
@@ -36,3 +41,15 @@ def request_get_user_property(request: RequestData):
         ResponseCode.SUCCESS,
         struct.pack('<Q', UserSaves(request.user_name_sha256).registry_timestamp())
     )
+
+
+def request_upload_timers(request: RequestData):
+    save_timers(UserSaves(request.user_name_sha256).user_name(), request.data)
+    return ResponseData(ResponseCode.SUCCESS)
+
+
+def request_download_timers(request: RequestData):
+    res = load_timers(UserSaves(request.user_name_sha256).user_name())
+    if not res:
+        return ResponseData(ResponseCode.NO_SAVES)
+    return ResponseData(ResponseCode.SUCCESS, json.dumps(res).encode('utf-8'))

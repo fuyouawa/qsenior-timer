@@ -27,7 +27,8 @@ enum RequestType
 	kSignin,
 	kLogin,
 	kGetUserProperty,
-	kUploadTimers
+	kUploadTimers,
+	kDownloadTimers
 };
 
 enum ResponseCode
@@ -35,7 +36,8 @@ enum ResponseCode
 	kSuccess,
 	kUserNameErr,
 	kPasswordErr,
-	kUserNameRepeat
+	kUserNameRepeat,
+	kNoSaves
 };
 
 struct PacketBuffer

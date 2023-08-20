@@ -4,11 +4,14 @@ inline const char* kLocalCommonName = "QLocal\\QSeniorTimer\\Common";
 
 enum LocalRequestCode
 {
-	kGetTimersTemp
+	kGetTimersTemp,
+	kAssignTimersTemp
 };
 
 enum LocalResponseCode
 {
 	kSuccessGetTimersTemp,
-	kFalidOpenTempFile
+	kFalidOpenTempFile,
+	kSuccessAssignTimersTemp,
+	kDataBroken,
 };

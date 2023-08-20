@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
 	int res = 0;
 	{
 		MainWin w;
+		MainWinPtr = &w;
 		w.show();
 		res = a.exec();
 	}

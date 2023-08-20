@@ -1,10 +1,64 @@
 ﻿#include "loginwin.h"
 
-LoginWin::LoginWin(QWidget *parent)
+LoginWin::LoginWin(QWidget* parent)
 	: QMainWindow(parent),
-	is_signin_(false)
+	is_signin_(false),
+	socket_(parent)
 {
 	ui.setupUi(this);
+	socket_.SetConnectedCb(this, [this]() {
+		RequestSigninOrLogin(is_signin_);
+		});
+
+	socket_.SetErrorOccuredCb(this, [this](QTcpSocket::SocketError err) {
+		QMessageBox::critical(this, "严重错误", "服务器连接失败!\n错误信息:" + socket_.ErrStr());
+		});
+
+	socket_.SetReceivedDataCb(this, [this](RequestType type) {
+		switch (type)
+		{
+		case kSignin:
+		{
+			auto packet = socket_.DequeuePacket();
+			switch (packet.data.at(0))
+			{
+			case kSuccess:
+				socket_.DisConnectServer();
+				QMessageBox::information(this, "提示", "登录成功!");
+				UserInfo::UserName = ui.edit_user_name->text();
+				UserInfo::Password = ui.edit_password->text();
+				SaveUserInfo();
+				RestartApp();
+				break;
+			default:
+				QMessageBox::information(this, "提示", "账号或者密码错误!");
+				break;
+			}
+			break;
+		}
+		case kLogin:
+		{
+			auto packet = socket_.DequeuePacket();
+			switch (packet.data.at(0))
+			{
+			case kSuccess:
+				QMessageBox::information(this, "提示", "注册成功, 现在您可以登录了!");
+				ui.edit_user_name->setText("");
+				ui.edit_password->setText("");
+				break;
+			case kUserNameRepeat:
+				QMessageBox::information(this, "提示", "已有相同的用户名!");
+				break;
+			}
+			break;
+		}
+		default:
+			break;
+		}
+		EnableButtons(true);
+		});
+
+	socket_.ConnectToServer();
 }
 
 LoginWin::~LoginWin()
@@ -24,61 +78,6 @@ void LoginWin::on_btn_view_pwd_clicked(bool checked)
 	ui.edit_password->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
 }
 
-void LoginWin::OnEvent(const ResponsedEvent& event)
-{
-	switch (event.type)
-	{
-	case kSignin:
-	{
-		auto packet = ClientManager::Instance->DequeuePacket();
-		switch (packet.data.at(0))
-		{
-		case kSuccess:
-			ClientManager::Instance->DisConnectServer();
-			QMessageBox::information(this, "提示", "登录成功!");
-			UserInfo::UserName = ui.edit_user_name->text();
-			UserInfo::Password = ui.edit_password->text();
-			SaveUserInfo();
-			RestartApp();
-			break;
-		default:
-			QMessageBox::information(this, "提示", "账号或者密码错误!");
-			break;
-		}
-		break;
-	}
-	case kLogin:
-	{
-		auto packet = ClientManager::Instance->DequeuePacket();
-		switch (packet.data.at(0))
-		{
-		case kSuccess:
-			QMessageBox::information(this, "提示", "注册成功, 现在您可以登录了!");
-			ui.edit_user_name->setText("");
-			ui.edit_password->setText("");
-			break;
-		case kUserNameRepeat:
-			QMessageBox::information(this, "提示", "已有相同的用户名!");
-			break;
-		}
-		break;
-	}
-	default:
-		break;
-	}
-	EnableButtons(true);
-}
-
-void LoginWin::OnEvent(const ConnectedToServerEvent& event)
-{
-	RequestSigninOrLogin(is_signin_);
-}
-
-void LoginWin::OnEvent(const ConnectErrorEvent& event)
-{
-	QMessageBox::critical(this, "严重错误", "服务器连接失败!\n错误名称: " + event.err_name + "\n错误信息: " + event.err_msg);
-}
-
 bool LoginWin::CheckInput(QString user_name, QString password)
 {
 	if (user_name.isEmpty() || password.isEmpty()) {
@@ -94,8 +93,8 @@ bool LoginWin::CheckInput(QString user_name, QString password)
 
 void LoginWin::AutoRequest()
 {
-	if (!ClientManager::Instance->IsConnecting())
-		ClientManager::Instance->ConnectServer();
+	if (!socket_.IsConnected())
+		socket_.ConnectToServer();
 	else
 		RequestSigninOrLogin(is_signin_);
 }
@@ -107,10 +106,10 @@ void LoginWin::RequestSigninOrLogin(bool is_signin)
 	if (!CheckInput(user_name, password)) return;
 	EnableButtons(false);
 	if (is_signin_) {
-		ClientManager::Instance->Request(user_name, password, { kSignin, QByteArray() });
+		socket_.Request(user_name, password, { kSignin, QByteArray() });
 	}
 	else {
-		ClientManager::Instance->Request(user_name, password, { kLogin, CombineQStrs({user_name, password}) });
+		socket_.Request(user_name, password, { kLogin, CombineQStrs({user_name, password}) });
 	}
 }
 

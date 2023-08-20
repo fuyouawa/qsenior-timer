@@ -10,6 +10,8 @@ class RequestType(Enum):
     SIGN_IN = 0
     LOG_IN = 1
     GET_USER_PROPERTY = 2
+    UPLOAD_TIMERS = 3
+    DOWNLOAD_TIMERS = 4
 
 
 class ResponseCode(Enum):
@@ -17,6 +19,7 @@ class ResponseCode(Enum):
     USER_NAME_ERR = 1
     PASSWORD_ERR = 2
     USER_NAME_REPEAT = 3
+    NO_SAVES = 4
 
 
 SHA256_DIGEST_LENGTH = 32

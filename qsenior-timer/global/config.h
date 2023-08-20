@@ -3,6 +3,7 @@
 #include <qrect.h>
 #include <qvector.h>
 #include <QDir>
+#include <QMainWindow>
 #include <array>
 
 inline const QString kAppVersion = "v1.0.0-beta";
@@ -80,6 +81,8 @@ struct TimerItemStoreData
 inline const QStringList kTextTimerTableHorizontalHeader = { "计时器名称", "总使用时间", "标签", "状态", "" };
 inline const QStringList kTextTimerItemStatus = { "暂停中", "计时中", "待命中", "挂机中"};
 
+inline QMainWindow* MainWinPtr = nullptr;
+
 class AppSettings
 {
 public:
@@ -101,6 +104,7 @@ class BasicConfig {
 public:
 	inline static QString SettingsSavePath;
 	inline static QString TimerDbSavePath;
+	inline static QString TempFilePath;
 	inline static QString AppDataDir;
 
 	inline static bool IsFirstRunApp;
